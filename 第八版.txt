@@ -278,20 +278,37 @@ local speedBypassEnabled = false
 local speedBypassValue = 30
 local staminaEvent = nil
 pcall(function() staminaEvent = ReplicatedStorage:WaitForChild("Remote", 5):WaitForChild("PlayerEvent", 5) end)
-if staminaEvent then
-	local oldNamecall
-	oldNamecall = hookmetamethod(game, "__namecall", function(self, ...)
-		local method = getnamecallmethod()
-		local args = {...}
-		if self == staminaEvent and method == "FireServer" then
-			if args[1] == "setStaminaOrFood" and args[2] == "stamina" and staminaEnabled then
-				args[3] = 100; return oldNamecall(self, unpack(args))
+-- 软无敌：不拦截伤害，只自动回血
+local godModeHealthThread = nil
+
+local function startGodModeHealth()
+	if godModeHealthThread then return end
+	godModeHealthThread = task.spawn(function()
+		while godModeEnabled do
+			local _, hum = GetCharacter(LocalPlayer)
+			if hum then
+				-- 当血量低于 90% 时，瞬间恢复到满血
+				if hum.Health < hum.MaxHealth * 0.9 then
+					pcall(function()
+						hum.Health = hum.MaxHealth
+					end)
+				end
 			end
-			if args[1] == "takeDamage" and godModeEnabled then return end
+			task.wait(0.15)  -- 150毫秒检测一次，延迟低但不过于频繁
 		end
-		return oldNamecall(self, ...)
+		godModeHealthThread = nil
 	end)
 end
+
+local function stopGodModeHealth()
+	godModeEnabled = false
+	if godModeHealthThread then
+		task.cancel(godModeHealthThread)
+		godModeHealthThread = nil
+	end
+end
+
+-- 无限体力还是用原来的拦截方式（这个相对安全，因为体力是本地状态）
 task.spawn(function()
 	while task.wait(0.3) do
 		if staminaEnabled and staminaEvent then pcall(function() staminaEvent:FireServer("setStaminaOrFood", "stamina", 100) end) end
@@ -386,8 +403,17 @@ end
 -- ============================================================
 -- 玩家功能（防封飞行引擎、飞车）
 -- ============================================================
-local PlayerConfig = { flyEnabled = false, flySpeed = 35, jumpEnabled = false, jumpPower = 50, infiniteJump = false }
-local PlayerRuntime = { flyConn = nil, bodyVelocity = nil, bodyGyro = nil }
+local PlayerConfig = { 
+	flyEnabled = false, flySpeed = 35, 
+	jumpEnabled = false, jumpPower = 50, infiniteJump = false,
+	wallDetectEnabled = true,   -- 射线检测墙体
+	healthLockEnabled = true,   -- 飞行中锁血，防摔死
+	flyMaxForce = 8e4,          -- 物理力上限
+}
+local PlayerRuntime = { 
+	flyConn = nil, bodyVelocity = nil, bodyGyro = nil,
+	healthThread = nil, diedConn = nil, wallDetected = false,
+}
 local playerQuickGui, playerQuickButton, playerQuickShown, playerQuickLocked, playerQuickRainbow
 local playerQuickPos = UDim2.new(0, 100, 0.5, -25)
 local PlayerControls = nil
@@ -435,7 +461,53 @@ local function disguiseHumanoidState(enabled)
 		pcall(function() hum:SetStateEnabled(Enum.HumanoidStateType.Freefall, true) end)
 	end
 end
+-- 墙体检测（恐拜大帝射线逻辑，安全版：不锚定Head）
+local function flyDetectWall()
+	local _, _, root = GetCharacter(LocalPlayer)
+	if not root then return false end
+	local pos = root.Position
+	local params = RaycastParams.new()
+	params.FilterType = Enum.RaycastFilterType.Exclude
+	params.FilterDescendantsInstances = { LocalPlayer.Character }
+	local rayCount = 8
+	local rayLength = 3.5
+	for i = 1, rayCount do
+		local angle = (i / rayCount) * 2 * math.pi
+		local dx = math.cos(angle)
+		local dz = math.sin(angle)
+		for j = -1, 1 do
+			local dir = Vector3.new(dx, j * 0.5, dz).Unit
+			local result = Workspace:Raycast(pos, dir * rayLength, params)
+			if result and result.Instance and result.Instance.CanCollide and result.Instance.Transparency < 0.9 then
+				return true
+			end
+		end
+	end
+	return false
+end
 
+-- 锁血线程（飞行中不死）
+local function startHealthLock()
+	if PlayerRuntime.healthThread then return end
+	PlayerRuntime.healthThread = task.spawn(function()
+		while PlayerConfig.flyEnabled do
+			local _, hum = GetCharacter(LocalPlayer)
+			if hum and hum.Health <= 0 then
+				pcall(function() hum.Health = hum.MaxHealth end)
+				pcall(function() hum:ChangeState(Enum.HumanoidStateType.Running) end)
+			end
+			task.wait(0.1)
+		end
+		PlayerRuntime.healthThread = nil
+	end)
+end
+
+local function stopHealthLock()
+	if PlayerRuntime.healthThread then
+		task.cancel(PlayerRuntime.healthThread)
+		PlayerRuntime.healthThread = nil
+	end
+end
 local function updatePlayerQuick()
 	if not playerQuickButton then return end
 	playerQuickButton.Text = PlayerConfig.flyEnabled and "飞行: 开" or "飞行: 关"
@@ -454,6 +526,11 @@ end
 local function stopPlayerFly()
 	clearPhysicalFly()
 	PlayerConfig.flyEnabled = false
+	stopHealthLock()
+	if PlayerRuntime.diedConn then
+		PlayerRuntime.diedConn:Disconnect()
+		PlayerRuntime.diedConn = nil
+	end
 	updatePlayerQuick()
 end
 
@@ -464,20 +541,34 @@ local function startPhysicalFly()
 	PlayerConfig.flyEnabled = true
 	secureNetworkOwnership()
 	disguiseHumanoidState(true)
+	
 	local bv = Instance.new("BodyVelocity")
 	bv.Name = "圣奥里_FlyVelocity"
-	bv.MaxForce = Vector3.new(1e5, 1e5, 1e5)
+	bv.MaxForce = Vector3.new(PlayerConfig.flyMaxForce, PlayerConfig.flyMaxForce, PlayerConfig.flyMaxForce)
 	bv.Velocity = Vector3.zero
 	bv.Parent = root
 	PlayerRuntime.bodyVelocity = bv
+	
 	local bg = Instance.new("BodyGyro")
 	bg.Name = "圣奥里_FlyGyro"
-	bg.MaxTorque = Vector3.new(1e5, 1e5, 1e5)
+	bg.MaxTorque = Vector3.new(PlayerConfig.flyMaxForce, PlayerConfig.flyMaxForce, PlayerConfig.flyMaxForce)
 	bg.P = 5e3
 	bg.Parent = root
 	PlayerRuntime.bodyGyro = bg
+	
 	hum.PlatformStand = true
 	hum.AutoRotate = false
+	
+	if PlayerConfig.healthLockEnabled then startHealthLock() end
+	PlayerRuntime.diedConn = hum.Died:Connect(function()
+		if PlayerConfig.flyEnabled and hum then
+			pcall(function()
+				hum.Health = hum.MaxHealth
+				hum:ChangeState(Enum.HumanoidStateType.Running)
+			end)
+		end
+	end)
+	
 	local currentSpeed = 0
 	PlayerRuntime.flyConn = RunService.RenderStepped:Connect(function(dt)
 		if not PlayerConfig.flyEnabled then return end
@@ -485,14 +576,29 @@ local function startPhysicalFly()
 		local cam = Workspace.CurrentCamera
 		if not currentRoot or not currentHum or not cam then return end
 		if PlayerRuntime.bodyVelocity and PlayerRuntime.bodyGyro then
-			local targetSpeed = math.min(PlayerConfig.flySpeed, 60)
-			if currentSpeed < targetSpeed then currentSpeed = currentSpeed + 2 * dt else currentSpeed = targetSpeed end
+			local speedMul = 1
+			if PlayerConfig.wallDetectEnabled then
+				PlayerRuntime.wallDetected = flyDetectWall()
+				if PlayerRuntime.wallDetected then speedMul = 0.3 end
+			end
+			
+			local targetSpeed = math.min(PlayerConfig.flySpeed, 60) * speedMul
+			if currentSpeed < targetSpeed then 
+				currentSpeed = currentSpeed + 2 * dt 
+			else 
+				currentSpeed = targetSpeed 
+			end
+			
 			local direction = getFlyDirection()
 			local jitter = Vector3.new(math.random(-2, 2), math.random(-2, 2), math.random(-2, 2))
 			local finalVelocity = (direction * currentSpeed) + (direction.Magnitude > 0 and jitter * 0.1 or Vector3.zero)
+			
 			PlayerRuntime.bodyVelocity.Velocity = finalVelocity
 			PlayerRuntime.bodyGyro.CFrame = cam.CFrame
-			if currentHum:GetState() == Enum.HumanoidStateType.Freefall then currentHum:ChangeState(Enum.HumanoidStateType.Running) end
+			
+			if currentHum:GetState() == Enum.HumanoidStateType.Freefall then 
+				currentHum:ChangeState(Enum.HumanoidStateType.Running) 
+			end
 		end
 	end)
 	updatePlayerQuick()
@@ -1406,7 +1512,7 @@ local function createMainWindow()
 	-- 主要功能
 	local Main = Section:Tab({ Title = "主要功能", Icon = "sliders-h" })
 	Main:Toggle({ Title = "无限体力", Default = false, Callback = function(v) staminaEnabled = v end })
-	Main:Toggle({ Title = "无敌模式 (免疫伤害)", Default = false, Callback = function(v) godModeEnabled = v end })
+Main:Toggle({ Title = "无敌模式 (软回血)", Default = false, Callback = function(v) godModeEnabled = v; if v then startGodModeHealth() else stopGodModeHealth() end end })
 	Main:Toggle({ Title = "速度绕过 (防检测加速)", Default = false, Callback = function(v) speedBypassEnabled = v end })
 	Main:Input({ Title = "速度绕过数值", Value = "30", PlaceholderText = "输入数字", ClearTextOnFocus = false, Callback = function(v) local n = tonumber(v); if n then speedBypassValue = n end end })
 	Main:Divider()
