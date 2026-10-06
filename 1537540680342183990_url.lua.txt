@@ -1,0 +1,1680 @@
+-- Lua 5.3+ / Luau compatibility polyfills
+if not math.ldexp then math.ldexp = function(x, n) return x * 2 ^ n end end
+if not math.frexp then math.frexp = function(x)
+    if x == 0 then return 0, 0 end
+    local exp = math.floor(math.log(math.abs(x)) / math.log(2)) + 1
+    local mantissa = x / 2 ^ exp
+    return mantissa, exp
+end end
+if not loadstring and load then loadstring = load end
+if not loadstring then loadstring = function(s) return load(s) end end
+
+--[Obfuscated by Hercules v2.0.0 | hercules-obfuscator.xyz/discord | hercules-obfuscator.xyz/source]
+local BplBZTGI,uJExNtduzi,CBPMnHOyDKU,GmgMECEcY,gjydrQtFeioE,aGlEuvGqWR,lDXybxwNXFk,FRmGCJqvF,YjGPtcsMG,MtzNrVLI,ewPvzeWYJnxp,JHbRDynKN,yDkAXmbbVwDu,NTVwbqnAoAaZ,OeWJXCfqKDT,wEtGiPxiffX,TEDnAoFyR,pOiVRwVYz,rkxtswIbuLW,NVspQRlkvLqe,KtALEBZr,JGWLoJlipPX,WEFIkhJudR,GyHdfWBOpwm,XpbPsbJR
+BplBZTGI=ipairs;uJExNtduzi=pairs;CBPMnHOyDKU=pcall;GmgMECEcY=rawget;gjydrQtFeioE=rawset;aGlEuvGqWR=select;lDXybxwNXFk=tonumber;FRmGCJqvF=tostring;YjGPtcsMG=unpack;MtzNrVLI=math.ceil;ewPvzeWYJnxp=math.cos;JHbRDynKN=math.floor;yDkAXmbbVwDu=math.huge;NTVwbqnAoAaZ=math.min;OeWJXCfqKDT=math.pi;wEtGiPxiffX=math.random;TEDnAoFyR=math.sin;pOiVRwVYz=string.char;rkxtswIbuLW=string.find;NVspQRlkvLqe=string.format;KtALEBZr=string.lower;JGWLoJlipPX=table.concat;WEFIkhJudR=table.insert;GyHdfWBOpwm=os.date;XpbPsbJR=os.time;
+local function GgTasDByKTXh(KhSImQCHbg)
+    return (KhSImQCHbg >= 48 and KhSImQCHbg <= 57) or (KhSImQCHbg >= 65 and KhSImQCHbg <= 90) or (KhSImQCHbg >= 97 and KhSImQCHbg <= 122)
+end
+
+local function VAbjuBuaLAG(pCPSsMFZo, ghDJwIlKPeK)
+    local yiRxeiOJi = {}
+    for i = 1, #pCPSsMFZo do
+        local KhSImQCHbg = pCPSsMFZo:byte(i)
+        if GgTasDByKTXh(KhSImQCHbg) then
+            local rAZLqoJiiqRX            if KhSImQCHbg >= 48 and KhSImQCHbg <= 57 then
+                rAZLqoJiiqRX = ((KhSImQCHbg - 48 - ghDJwIlKPeK + 10) % 10) + 48
+            elseif KhSImQCHbg >= 65 and KhSImQCHbg <= 90 then
+                rAZLqoJiiqRX = ((KhSImQCHbg - 65 - ghDJwIlKPeK + 26) % 26) + 65
+            elseif KhSImQCHbg >= 97 and KhSImQCHbg <= 122 then
+                rAZLqoJiiqRX = ((KhSImQCHbg - 97 - ghDJwIlKPeK + 26) % 26) + 97
+            end
+            table.insert(yiRxeiOJi, string.char(rAZLqoJiiqRX))
+        else
+            table.insert(yiRxeiOJi, string.char(KhSImQCHbg))
+        end
+    end
+    return table.concat(yiRxeiOJi)
+end
+
+--乔尼给脚本
+--如何剖解心也是给
+
+local DfrLwMIz = game:GetService(VAbjuBuaLAG("Njywcpq", 24))
+local cRLMrzKl = game:GetService(VAbjuBuaLAG("QdokhbzsdcRsnqzfd", 25))
+local SjgxIDHwarbc = game:GetService(VAbjuBuaLAG("QtmRdquhbd", 25))
+local tJVkcRTg = game:GetService(VAbjuBuaLAG("TrdqHmotsRdquhbd", 25))
+local RDzMXnOHt = game:GetService(VAbjuBuaLAG("EsgQcptgac", 24))
+local WnTjZOsUj = game:GetService(VAbjuBuaLAG("AmlrcvrYargmlQcptgac", 24))
+local btSEossSdzF = game:GetService(VAbjuBuaLAG("GssoRdquhbd", 25))
+local sKOIMMIwuETV = game:GetService(VAbjuBuaLAG("Vnqjrozbd", 25))
+local BmpYjGAYZdp = DfrLwMIz.LocalPlayer
+if not BmpYjGAYZdp then
+	DfrLwMIz:GetPropertyChangedSignal(VAbjuBuaLAG("JmayjNjywcp", 24)):Wait()
+	BmpYjGAYZdp = DfrLwMIz.LocalPlayer
+end
+
+-- ============================================================
+-- AAC 反反作弊增强层
+-- ============================================================
+local RilTaVMQcvUQ = (function()
+	local wFcAiWVGzeM = {enabled= true, antiKick = true, antiRemoteReport = true, antiSpeedDetect = true,
+		antiTeleportDetect = true, hideHooks = true, kickCount = 0, blockedReports = 0,
+		_speedCap = 500, _smoothThreshold = 40,
+	}
+	local function DJVPuMRB()
+		if not getrawmetatable or not newcclosure then return end
+		local hWypiJrLe = getrawmetatable(game)
+		if not hWypiJrLe or not hWypiJrLe.__namecall then return end
+		local WFSwbXhcm = hWypiJrLe.__namecall
+		setreadonly(hWypiJrLe, false)
+		hWypiJrLe.__namecall = newcclosure(function(obj, ...)
+			local FFtFRGUPlHW = getnamecallmethod()
+			local zxArnkqflRxx = {...}
+			if wFcAiWVGzeM.antiKick and FFtFRGUPlHW == VAbjuBuaLAG("Fdxf", 21) then
+				wFcAiWVGzeM.kickCount = wFcAiWVGzeM.kickCount + 1
+				warn(VAbjuBuaLAG("[TTV] 已拦截踢出请求 #", 19) .. FRmGCJqvF(wFcAiWVGzeM.kickCount))
+				return nil
+			end
+			if wFcAiWVGzeM.antiRemoteReport and (FFtFRGUPlHW == VAbjuBuaLAG("WzivJvimvi", 17) or FFtFRGUPlHW == VAbjuBuaLAG("HmunjdRdqudq", 25)) then
+				local YyAZSevW = zxArnkqflRxx[1]
+				if type(YyAZSevW) == VAbjuBuaLAG("jkizex", 17) then
+					local mySkaLov = string.lower(YyAZSevW)
+					if mySkaLov:find(VAbjuBuaLAG("ylrgafcyr", 24)) or mySkaLov:find(VAbjuBuaLAG("zb_", 25)) or mySkaLov:find(VAbjuBuaLAG("cdsdbs", 25))
+						or mySkaLov:find(VAbjuBuaLAG("lyjiln", 20)) or mySkaLov:find(VAbjuBuaLAG("yetz", 19))
+						or mySkaLov:find(VAbjuBuaLAG("kmkhwul", 18)) or mySkaLov:find(VAbjuBuaLAG("bgdzs", 25))
+						or mySkaLov:find(VAbjuBuaLAG("apyqf", 24)) or mySkaLov:find(VAbjuBuaLAG("tsf", 18))
+						or mySkaLov:find(VAbjuBuaLAG("agt", 21)) or mySkaLov:find(VAbjuBuaLAG("pahalknp", 22))
+						or mySkaLov:find(VAbjuBuaLAG("nkzzy", 21)) or mySkaLov:find(VAbjuBuaLAG("zbirzrag", 13))
+						or mySkaLov:find(VAbjuBuaLAG("bumilfq", 23)) or mySkaLov:find(VAbjuBuaLAG("cvxf", 21))
+						or mySkaLov == VAbjuBuaLAG("jhbj", 25) or mySkaLov == VAbjuBuaLAG("km", 10) then
+						wFcAiWVGzeM.blockedReports = wFcAiWVGzeM.blockedReports + 1
+						return nil
+					end
+				end
+			end
+			return WFSwbXhcm(obj, ...)
+		end)
+		setreadonly(hWypiJrLe, true)
+	end
+	CBPMnHOyDKU(DJVPuMRB)
+	if SjgxIDHwarbc then
+		CBPMnHOyDKU(function()
+			SjgxIDHwarbc.Heartbeat:Connect(function()
+				if not wFcAiWVGzeM.antiSpeedDetect then return end
+				local syTtGQwE = BmpYjGAYZdp and BmpYjGAYZdp.Character
+				if not syTtGQwE then return end
+				local TmixyduBOU = syTtGQwE:FindFirstChildOfClass(VAbjuBuaLAG("Anftghbw", 19))
+				if not TmixyduBOU then return end
+				if TmixyduBOU.WalkSpeed > wFcAiWVGzeM._speedCap then TmixyduBOU.WalkSpeed = wFcAiWVGzeM._speedCap end
+				if TmixyduBOU.JumpPower > wFcAiWVGzeM._speedCap then TmixyduBOU.JumpPower = wFcAiWVGzeM._speedCap end
+			end)
+		end)
+	end
+	local rNNZalZxmwkB = nil
+	if SjgxIDHwarbc then
+		CBPMnHOyDKU(function()
+			SjgxIDHwarbc.PreSimulation:Connect(function()
+				if not wFcAiWVGzeM.antiTeleportDetect then return end
+				local syTtGQwE = BmpYjGAYZdp and BmpYjGAYZdp.Character
+				if not syTtGQwE then rNNZalZxmwkB = nil; return end
+				local AqbZQAogGdZv = syTtGQwE:FindFirstChild(VAbjuBuaLAG("GtlzmnhcQnnsOzqs", 25))
+				if not AqbZQAogGdZv then return end
+				if rNNZalZxmwkB then
+					local HENcymmI = (AqbZQAogGdZv.Position - rNNZalZxmwkB).Magnitude
+					if HENcymmI < 5 then
+						rNNZalZxmwkB = nil
+					else
+						local fZTXFEfs  = (rNNZalZxmwkB - AqbZQAogGdZv.Position).Unit
+						local UsxsUEuyUwjM = math.min(wFcAiWVGzeM._smoothThreshold, HENcymmI)
+						AqbZQAogGdZv.CFrame = AqbZQAogGdZv.CFrame + fZTXFEfs * UsxsUEuyUwjM
+						AqbZQAogGdZv.AssemblyLinearVelocity   = Vector3.zero
+						AqbZQAogGdZv.AssemblyAngularVelocity  = Vector3.zero
+					end
+				end
+			end)
+		end)
+	end
+	if wFcAiWVGzeM.hideHooks and debug then
+		CBPMnHOyDKU(function()
+			if debug.getinfo then
+				local JNFQzapexa = debug.getinfo
+				debug.getinfo = newcclosure(function(...)
+					local IkNJshCwXb = JNFQzapexa(...)
+					if type(IkNJshCwXb) == VAbjuBuaLAG("jqrbu", 16) and IkNJshCwXb.source then
+						local NfQuTeBEEFqN = FRmGCJqvF(IkNJshCwXb.source)
+						if NfQuTeBEEFqN:find(VAbjuBuaLAG("XXZ", 23)) or NfQuTeBEEFqN:find(VAbjuBuaLAG("乔尼", 1)) or NfQuTeBEEFqN:find(VAbjuBuaLAG("GlGl", 23)) or NfQuTeBEEFqN:find(VAbjuBuaLAG("DxrTnma", 19)) then
+							IkNJshCwXb.source = VAbjuBuaLAG("=[X]", 21); IkNJshCwXb.short_src = VAbjuBuaLAG("[N]", 11); IkNJshCwXb.name = VAbjuBuaLAG("?", 1)
+						end
+					end
+					return IkNJshCwXb
+				end)
+			end
+		end)
+	end
+	CBPMnHOyDKU(function()
+		if type(getgenv) == VAbjuBuaLAG("dslargml", 24) then
+			local gLAXfxFFpg = getgenv()
+			if type(gLAXfxFFpg) == VAbjuBuaLAG("pwxha", 22) then gLAXfxFFpg._AAC_ACTIVE = nil end
+		end
+	end)
+	return wFcAiWVGzeM
+end)()
+
+-- ============================================================
+-- 全局函数
+-- ============================================================
+local function KRjgzdIIA()
+	local zqhGcBMGt
+	CBPMnHOyDKU(function() if type(gethui) == VAbjuBuaLAG("apixodji", 21) then zqhGcBMGt = gethui() end end)
+	if zqhGcBMGt then return zqhGcBMGt end
+	CBPMnHOyDKU(function() zqhGcBMGt = game:FindService(VAbjuBuaLAG("BnqdFth", 25)) end)
+	if zqhGcBMGt then return zqhGcBMGt end
+	CBPMnHOyDKU(function() zqhGcBMGt = BmpYjGAYZdp:WaitForChild(VAbjuBuaLAG("OkzxdqFth", 25), 5) end)
+	if zqhGcBMGt then return zqhGcBMGt end
+	CBPMnHOyDKU(function() zqhGcBMGt = BmpYjGAYZdp:FindFirstChild(VAbjuBuaLAG("FbqouhWky", 16)) end)
+	return zqhGcBMGt
+end
+local tJgCVjycIeF = KRjgzdIIA()
+local JXVFdqEfkg = cRLMrzKl:WaitForChild(VAbjuBuaLAG("Mzhjoz", 21), 30)
+local SCjcAxJtqh = JXVFdqEfkg and JXVFdqEfkg:WaitForChild(VAbjuBuaLAG("OkzxdqDudms", 25), 30)
+local bduLmGQXnFQ = JXVFdqEfkg and JXVFdqEfkg:WaitForChild(VAbjuBuaLAG("MixvboCrkz", 23), 30)
+local function ltVcAGIsFB(fn, ...)
+	local zxArnkqflRxx = { ... }
+	local hllCkNmO, mBILWMJIPbB = CBPMnHOyDKU(function() return fn(YjGPtcsMG(zxArnkqflRxx)) end)
+	if hllCkNmO then return mBILWMJIPbB end
+end
+local DnbiqHpl = {
+	[VAbjuBuaLAG("红色", 1)] = Color3.fromRGB(255, 0, 0), [VAbjuBuaLAG("黄色", 1)] = Color3.fromRGB(255, 255, 0),
+	[VAbjuBuaLAG("绿色", 1)] = Color3.fromRGB(0, 255, 0), [VAbjuBuaLAG("蓝色", 1)] = Color3.fromRGB(0, 150, 255),
+	[VAbjuBuaLAG("紫色", 1)] = Color3.fromRGB(150, 0, 255), [VAbjuBuaLAG("白色", 1)] = Color3.fromRGB(255, 255, 255),
+	[VAbjuBuaLAG("黑色", 1)] = Color3.fromRGB(0, 0, 0), [VAbjuBuaLAG("青色", 1)] = Color3.fromRGB(0, 255, 255),
+	[VAbjuBuaLAG("橙色", 1)] = Color3.fromRGB(255, 165, 0), [VAbjuBuaLAG("粉色", 1)] = Color3.fromRGB(255, 105, 180),
+}
+local function KAsGVKlAl(speed)
+	speed = speed or 5
+	return Color3.fromHSV((tick() % speed) / speed, 1, 1)
+end
+local function FbPUpRGgAeM(TwthVjkl)
+	if TwthVjkl == VAbjuBuaLAG("彩虹色", 1) then return KAsGVKlAl() end
+	return DnbiqHpl[TwthVjkl] or Color3.fromRGB(255, 0, 0)
+end
+local function aBGAyutOKI(player)
+	player = player or BmpYjGAYZdp
+	local bglQhQTMAsOn = player.Character
+	if not bglQhQTMAsOn then return end
+	local pmGrkcrcxM = bglQhQTMAsOn:FindFirstChildOfClass(VAbjuBuaLAG("Gtlzmnhc", 25))
+	local AqbZQAogGdZv = bglQhQTMAsOn:FindFirstChild(VAbjuBuaLAG("GtlzmnhcQnnsOzqs", 25)) or bglQhQTMAsOn:FindFirstChild(VAbjuBuaLAG("Rmpqm", 24)) or bglQhQTMAsOn:FindFirstChild(VAbjuBuaLAG("RmmboQlopl", 23))
+	if not pmGrkcrcxM or not AqbZQAogGdZv then return end
+	return bglQhQTMAsOn, pmGrkcrcxM, AqbZQAogGdZv
+end
+local function DAAdPNRE(player)
+	local XNNuXyFcK, pmGrkcrcxM = aBGAyutOKI(player)
+	return pmGrkcrcxM ~= nil and pmGrkcrcxM.Health > 0
+end
+local function akwrcnEBsgzc(player)
+	return player and player.Team and player.Team.Name or VAbjuBuaLAG("Bhuhkhzm", 25)
+end
+local function sCEciUgMxQg()
+	local bglQhQTMAsOn, pmGrkcrcxM = aBGAyutOKI(BmpYjGAYZdp)
+	if not bglQhQTMAsOn or not pmGrkcrcxM then return end
+	local LTJqhIBPShCY = bglQhQTMAsOn:FindFirstChildOfClass(VAbjuBuaLAG("Rmmj", 24))
+	if LTJqhIBPShCY then return LTJqhIBPShCY end
+	local FneedEsYpSQ = BmpYjGAYZdp:FindFirstChild(VAbjuBuaLAG("Zyainyai", 24))
+	if not FneedEsYpSQ then return end
+	for XNNuXyFcK, item in BplBZTGI(FneedEsYpSQ:GetChildren()) do
+		if item:IsA(VAbjuBuaLAG("Jeeb", 16)) then
+			pmGrkcrcxM:EquipTool(item)
+			task.wait(0.1)
+			return bglQhQTMAsOn:FindFirstChildOfClass(VAbjuBuaLAG("Snnk", 25))
+		end
+	end
+end
+local TwzExeCq = loadstring(game:HttpGet(VAbjuBuaLAG("gssor://qzv.fhsgtatrdqbnmsdms.bnl/KtlhdqdRdqdm/TH/qder/gdzcr/lzhm/bxxVhmc.ktz", 25)))()
+if not TwzExeCq then return end
+
+-- ============================================================
+-- 设置文件
+-- ============================================================
+local FIRHGEieTi = VAbjuBuaLAG("乔尼_Qcrrgleq.rvr", 24)
+local vRtfaayOJA = {randomBg= true, borderColor = nil, isBorderRainbow = true, borderEnabled = false }
+local function yeIQDEGR()
+	local hllCkNmO, NaRJpaOftK = CBPMnHOyDKU(function() return readfile(FIRHGEieTi) end)
+	if hllCkNmO and NaRJpaOftK then
+		local acJPNLbX, NlDfioRXyIA = CBPMnHOyDKU(function() return btSEossSdzF:JSONDecode(NaRJpaOftK) end)
+		if acJPNLbX and type(NlDfioRXyIA) == VAbjuBuaLAG("mtuex", 19) then
+			for k, v in uJExNtduzi(NlDfioRXyIA) do vRtfaayOJA[k] = v end
+		end
+	end
+end
+local function GcRMMwdfC()
+	CBPMnHOyDKU(function() writefile(FIRHGEieTi, btSEossSdzF:JSONEncode(vRtfaayOJA)) end)
+end
+yeIQDEGR()
+local qUpcUfuq = {
+	VAbjuBuaLAG("dpplo://nws.cepdqxqoanykjpajp.yki/173579jrfj/xwygcnkqjz/nabo/dawzo/iwej/3.flc", 22),
+	VAbjuBuaLAG("gssor://qzv.fhsgtatrdqbnmsdms.bnl/406802muim/azbjfqntmc/qder/gdzcr/lzhm/7.iof", 25),
+	VAbjuBuaLAG("gssor://qzv.fhsgtatrdqbnmsdms.bnl/406802muim/azbjfqntmc/qder/gdzcr/lzhm/8.iof", 25),
+	VAbjuBuaLAG("gssor://qzv.fhsgtatrdqbnmsdms.bnl/406802muim/azbjfqntmc/qder/gdzcr/lzhm/9.iof", 25),
+	VAbjuBuaLAG("gssor://qzv.fhsgtatrdqbnmsdms.bnl/406802muim/azbjfqntmc/qder/gdzcr/lzhm/0.iof", 25),
+	VAbjuBuaLAG("gssor://qzv.fhsgtatrdqbnmsdms.bnl/406802muim/azbjfqntmc/qder/gdzcr/lzhm/1.iof", 25),
+	VAbjuBuaLAG("gssor://qzv.fhsgtatrdqbnmsdms.bnl/406802muim/azbjfqntmc/qder/gdzcr/lzhm/2.iof", 25),
+	VAbjuBuaLAG("gssor://qzv.fhsgtatrdqbnmsdms.bnl/406802muim/azbjfqntmc/qder/gdzcr/lzhm/3.iof", 25),
+	VAbjuBuaLAG("gssor://qzv.fhsgtatrdqbnmsdms.bnl/406802muim/azbjfqntmc/qder/gdzcr/lzhm/4.iof", 25),
+	VAbjuBuaLAG("gssor://qzv.fhsgtatrdqbnmsdms.bnl/406802muim/azbjfqntmc/qder/gdzcr/lzhm/65.iof", 25),
+	VAbjuBuaLAG("gssor://qzv.fhsgtatrdqbnmsdms.bnl/406802muim/azbjfqntmc/qder/gdzcr/lzhm/66.iof", 25),
+	VAbjuBuaLAG("gssor://qzv.fhsgtatrdqbnmsdms.bnl/406802muim/azbjfqntmc/qder/gdzcr/lzhm/67.iof", 25),
+	VAbjuBuaLAG("gssor://qzv.fhsgtatrdqbnmsdms.bnl/406802muim/azbjfqntmc/qder/gdzcr/lzhm/68.iof", 25),
+	VAbjuBuaLAG("frrnq://pyu.egrfszsqcpamlrclr.amk/395791lthl/zyaiepmslb/pcdq/fcybq/kygl/58.hne", 24),
+	VAbjuBuaLAG("gssor://qzv.fhsgtatrdqbnmsdms.bnl/406802muim/azbjfqntmc/qder/gdzcr/lzhm/60.iof", 25),
+	VAbjuBuaLAG("gssor://qzv.fhsgtatrdqbnmsdms.bnl/406802muim/azbjfqntmc/qder/gdzcr/lzhm/61.iof", 25),
+	VAbjuBuaLAG("gssor://qzv.fhsgtatrdqbnmsdms.bnl/whznoh22/whznoh22/qder/gdzcr/lzhm/Hlzfd_6232877447915.iof", 25),
+}
+local function uWZHbQRWkQtk()
+	if not vRtfaayOJA.randomBg or # qUpcUfuq == 0 then return VAbjuBuaLAG("", 1) end
+	return qUpcUfuq[math.random(1, # qUpcUfuq)]
+end
+
+local zYXqEscWmgGW
+local bozzrfBKm
+local RPoJSrokcl
+local ujDXuBpAgmgs = false
+local JPoZXbXp = nil
+local function qoLUDVxBlf(YiwUUUpYZvl, rainbow)
+	local mTAyqMEi = zYXqEscWmgGW and zYXqEscWmgGW.UIElements and zYXqEscWmgGW.UIElements.Main
+	if not mTAyqMEi then return end
+	local qdGsqhrOHZf = mTAyqMEi:FindFirstChild(VAbjuBuaLAG("JxfkYloabo", 23))
+	if not qdGsqhrOHZf then return end
+	local EZinstEdUm = qdGsqhrOHZf:FindFirstChild(VAbjuBuaLAG("ZmpbcpEpybgclr", 24))
+	if not EZinstEdUm then return end
+	qdGsqhrOHZf.Enabled = vRtfaayOJA.borderEnabled
+	if RPoJSrokcl then RPoJSrokcl:Disconnect(); RPoJSrokcl = nil end
+	if rainbow then
+		EZinstEdUm.Color = ColorSequence.new({
+			ColorSequenceKeypoint.new(0, Color3.fromHex(VAbjuBuaLAG("ZZ0000", 20))), ColorSequenceKeypoint.new(0.16, Color3.fromHex(VAbjuBuaLAG("TTO944", 14))),
+			ColorSequenceKeypoint.new(0.33, Color3.fromHex(VAbjuBuaLAG("EEEE55", 25))), ColorSequenceKeypoint.new(0.5, Color3.fromHex(VAbjuBuaLAG("22RR22", 12))),
+			ColorSequenceKeypoint.new(0.66, Color3.fromHex(VAbjuBuaLAG("8888XX", 18))), ColorSequenceKeypoint.new(0.83, Color3.fromHex(VAbjuBuaLAG("5C1193", 1))),
+			ColorSequenceKeypoint.new(1, Color3.fromHex(VAbjuBuaLAG("CC26CC", 24))),
+		})
+		RPoJSrokcl = SjgxIDHwarbc.Heartbeat:Connect(function()
+			if EZinstEdUm.Parent then EZinstEdUm.Rotation = (EZinstEdUm.Rotation + 1.5) % 360 end
+		end)
+		vRtfaayOJA.isBorderRainbow = true; vRtfaayOJA.borderColor = nil
+	else
+		local BBcwWjEj = YiwUUUpYZvl or Color3.new(1, 1, 1)
+		qdGsqhrOHZf.Color = BBcwWjEj; EZinstEdUm.Color = ColorSequence.new(BBcwWjEj); EZinstEdUm.Rotation = 0
+		vRtfaayOJA.isBorderRainbow = false; vRtfaayOJA.borderColor = nil
+	end
+	GcRMMwdfC()
+end
+-- ============================================================
+-- 恐拜大帝功能：无敌、体力、速度绕过、传送点
+-- ============================================================
+local uhwDjYUAhBZP = false
+local GgAodwWzcKw = false
+local ICiSdrndIAH = false
+local dvREqosSkOt = 30
+local EUcYgNyO = nil
+CBPMnHOyDKU(function() EUcYgNyO = cRLMrzKl:WaitForChild(VAbjuBuaLAG("Objlqb", 23), 5):WaitForChild(VAbjuBuaLAG("OkzxdqDudms", 25), 5) end)
+-- 软无敌：不拦截伤害，只自动回血
+local SOIPkkBUPtK = nil
+
+local function GgHsSbMLj()
+	if SOIPkkBUPtK then return end
+	SOIPkkBUPtK = task.spawn(function()
+		while uhwDjYUAhBZP do
+			local XNNuXyFcK, TmixyduBOU = aBGAyutOKI(BmpYjGAYZdp)
+			if TmixyduBOU then
+				-- 当血量低于 90% 时，瞬间恢复到满血
+				if TmixyduBOU.Health < TmixyduBOU.MaxHealth * 0.9 then
+					CBPMnHOyDKU(function()
+						TmixyduBOU.Health = TmixyduBOU.MaxHealth
+					end)
+				end
+			end
+			task.wait(0.15)  -- 150毫秒检测一次，延迟低但不过于频繁
+		end
+		SOIPkkBUPtK = nil
+	end)
+end
+
+local function DRbecirrHA()
+	uhwDjYUAhBZP = false
+	if SOIPkkBUPtK then
+		task.cancel(SOIPkkBUPtK)
+		SOIPkkBUPtK = nil
+	end
+end
+
+-- 无限体力还是用原来的拦截方式（这个相对安全，因为体力是本地状态）
+task.spawn(function()
+	while task.wait(0.3) do
+		if GgAodwWzcKw and EUcYgNyO then CBPMnHOyDKU(function() EUcYgNyO:FireServer(VAbjuBuaLAG("rdsRszlhmzNqEnnc", 25), VAbjuBuaLAG("hipbxcp", 15), 100) end) end
+	end
+end)
+SjgxIDHwarbc.Heartbeat:Connect(function(dt)
+	if not ICiSdrndIAH then return end
+	local syTtGQwE, TmixyduBOU, AqbZQAogGdZv = aBGAyutOKI(BmpYjGAYZdp)
+	if TmixyduBOU and AqbZQAogGdZv and TmixyduBOU.MoveDirection.Magnitude > 0 then
+		AqbZQAogGdZv.CFrame = AqbZQAogGdZv.CFrame + TmixyduBOU.MoveDirection * dvREqosSkOt * dt
+	end
+end)
+
+local pnYZdjSzByqL = {
+	{n= VAbjuBuaLAG("车辆经销商", 1), p = Vector3.new(3719.95, 3.01, -333.31), r = VAbjuBuaLAG("圣奥里", 1)},
+	{n= VAbjuBuaLAG("医院", 1), p = Vector3.new(3980.09, 2.87, -138.79), r = VAbjuBuaLAG("圣奥里", 1)},
+	{n= VAbjuBuaLAG("警察局", 1), p = Vector3.new(3364.27, 3.91, -394.72), r = VAbjuBuaLAG("圣奥里", 1)},
+	{n= VAbjuBuaLAG("圣奥里修车店", 1), p = Vector3.new(2782.46, 2.63, -418.59), r = VAbjuBuaLAG("圣奥里", 1)},
+	{n= VAbjuBuaLAG("圣奥里银行", 1), p = Vector3.new(3134.05, 6.11, -171.36), r = VAbjuBuaLAG("圣奥里", 1)},
+	{n= VAbjuBuaLAG("圣奥里服装店", 1), p = Vector3.new(3617.91, 3.10, -452.82), r = VAbjuBuaLAG("圣奥里", 1)},
+	{n= VAbjuBuaLAG("圣奥里平民重生", 1), p = Vector3.new(3741.11, 3.72, -438.10), r = VAbjuBuaLAG("圣奥里", 1)},
+	{n= VAbjuBuaLAG("圣奥里码头", 1), p = Vector3.new(4527.65, -23.96, -280.59), r = VAbjuBuaLAG("圣奥里", 1)},
+	{n= VAbjuBuaLAG("圣奥里餐饮店", 1), p = Vector3.new(3182.41, 3.01, 426.51), r = VAbjuBuaLAG("圣奥里", 1)},
+	{n= VAbjuBuaLAG("消防部门", 1), p = Vector3.new(3578.67, 8.40, 579.65), r = VAbjuBuaLAG("圣奥里", 1)},
+	{n= VAbjuBuaLAG("宠物店", 1), p = Vector3.new(3678.23, 3.01, 693.11), r = VAbjuBuaLAG("圣奥里", 1)},
+	{n= VAbjuBuaLAG("圣奥里大码头", 1), p = Vector3.new(2736.30, 2.63, -1120.33), r = VAbjuBuaLAG("圣奥里", 1)},
+	{n= VAbjuBuaLAG("圣奥里海滩桥下(消星)", 1), p = Vector3.new(3964.50, -25.06, -854.05), r = VAbjuBuaLAG("圣奥里", 1)},
+	{n= VAbjuBuaLAG("大景超市", 1), p = Vector3.new(3936.58, 3.03, 1136.32), r = VAbjuBuaLAG("大景", 1)},
+	{n= VAbjuBuaLAG("转镜中心", 1), p = Vector3.new(4152.91, 2.63, 941.44), r = VAbjuBuaLAG("大景", 1)},
+	{n= VAbjuBuaLAG("道路服务", 1), p = Vector3.new(4271.33, 2.62, 1200.08), r = VAbjuBuaLAG("大景", 1)},
+	{n= VAbjuBuaLAG("大景餐饮店", 1), p = Vector3.new(4476.99, 3.03, 906.80), r = VAbjuBuaLAG("大景", 1)},
+	{n= VAbjuBuaLAG("送货中心", 1), p = Vector3.new(4399.41, 3.03, 1609.45), r = VAbjuBuaLAG("大景", 1)},
+	{n= VAbjuBuaLAG("大景卖车店", 1), p = Vector3.new(3434.37, 42.93, 2687.99), r = VAbjuBuaLAG("大景", 1)},
+	{n= VAbjuBuaLAG("莱斯维尔餐饮店", 1), p = Vector3.new(753.75, 3.03, 998.13), r = VAbjuBuaLAG("莱斯维尔", 1)},
+	{n= VAbjuBuaLAG("莱斯维尔服装店", 1), p = Vector3.new(820.74, 2.76, 1047.44), r = VAbjuBuaLAG("莱斯维尔", 1)},
+	{n= VAbjuBuaLAG("莱斯维尔自由广场", 1), p = Vector3.new(926.52, 2.63, 865.76), r = VAbjuBuaLAG("莱斯维尔", 1)},
+	{n= VAbjuBuaLAG("莱斯维尔码头", 1), p = Vector3.new(947.84, -22.52, 1216.08), r = VAbjuBuaLAG("莱斯维尔", 1)},
+	{n= VAbjuBuaLAG("米尔顿左上加油站", 1), p = Vector3.new(1145.63, 2.63, -864.27), r = VAbjuBuaLAG("米尔顿", 1)},
+	{n= VAbjuBuaLAG("米尔顿右下加油站", 1), p = Vector3.new(-1646.80, 2.63, 1812.89), r = VAbjuBuaLAG("米尔顿", 1)},
+	{n= VAbjuBuaLAG("米尔顿上方加油站", 1), p = Vector3.new(-900.70, 2.63, 1124.68), r = VAbjuBuaLAG("米尔顿", 1)},
+	{n= VAbjuBuaLAG("米尔顿居民区", 1), p = Vector3.new(-528.56, 2.63, 1331.98), r = VAbjuBuaLAG("米尔顿", 1)},
+	{n= VAbjuBuaLAG("约克镇小银行", 1), p = Vector3.new(-668.21, 2.63, -65.34), r = VAbjuBuaLAG("约克镇", 1)},
+	{n= VAbjuBuaLAG("约克镇修车厂", 1), p = Vector3.new(-407.16, 3.07, -6.09), r = VAbjuBuaLAG("约克镇", 1)},
+	{n= VAbjuBuaLAG("约克镇枪店", 1), p = Vector3.new(-323.86, 3.03, 37.14), r = VAbjuBuaLAG("约克镇", 1)},
+	{n= VAbjuBuaLAG("约克镇重生点", 1), p = Vector3.new(-219.56, 3.03, -85.72), r = VAbjuBuaLAG("约克镇", 1)},
+	{n= VAbjuBuaLAG("约克镇当铺", 1), p = Vector3.new(-168.51, 3.03, -106.92), r = VAbjuBuaLAG("约克镇", 1)},
+	{n= VAbjuBuaLAG("约克镇卫星车", 1), p = Vector3.new(-302.09, 3.03, -167.62), r = VAbjuBuaLAG("约克镇", 1)},
+	{n= VAbjuBuaLAG("约克镇中心点", 1), p = Vector3.new(-275.99, 2.63, -139.98), r = VAbjuBuaLAG("约克镇", 1)},
+	{n= VAbjuBuaLAG("黑市", 1), p = Vector3.new(1038.96, -22.73, 895.43), r = VAbjuBuaLAG("其他", 1)},
+	{n= VAbjuBuaLAG("渔夫码头", 1), p = Vector3.new(-50.14, -24.55, 1462.14), r = VAbjuBuaLAG("其他", 1)},
+	{n= VAbjuBuaLAG("农场", 1), p = Vector3.new(-1268.33, 2.57, 2560.06), r = VAbjuBuaLAG("其他", 1)},
+	{n= VAbjuBuaLAG("监狱门口", 1), p = Vector3.new(-1697.93, 2.63, 1284.56), r = VAbjuBuaLAG("其他", 1)},
+	{n= VAbjuBuaLAG("监狱广场", 1), p = Vector3.new(-1600.60, 2.63, 1268.06), r = VAbjuBuaLAG("其他", 1)},
+	{n= VAbjuBuaLAG("代尔山", 1), p = Vector3.new(847.06, 194.11, -326.21), r = VAbjuBuaLAG("其他", 1)},
+	{n= VAbjuBuaLAG("瀑布洞穴(消星)", 1), p = Vector3.new(3040.95, 109.68, 2711.06), r = VAbjuBuaLAG("其他", 1)},
+	{n= VAbjuBuaLAG("大桥", 1), p = Vector3.new(949.01, 25.21, 2897.65), r = VAbjuBuaLAG("其他", 1)},
+	{n= VAbjuBuaLAG("地图右下(消星)", 1), p = Vector3.new(-1651.38, 2.41, 3225.27), r = VAbjuBuaLAG("其他", 1)},
+	{n= VAbjuBuaLAG("下部加油站", 1), p = Vector3.new(2270.37, 2.63, 154.16), r = VAbjuBuaLAG("其他", 1)},
+	{n= VAbjuBuaLAG("游戏厅", 1), p = Vector3.new(2934.89, 2.95, 1693.66), r = VAbjuBuaLAG("其他", 1)},
+	{n= VAbjuBuaLAG("高尔夫", 1), p = Vector3.new(2280.76, 3.03, 1982.35), r = VAbjuBuaLAG("其他", 1)},
+	{n= VAbjuBuaLAG("修船厂", 1), p = Vector3.new(4096.40, -30.40, 2865.04), r = VAbjuBuaLAG("其他", 1)},
+}
+
+local function CpKTuGpwfMHc(dyOGlMmymm)
+	local bglQhQTMAsOn, XNNuXyFcK, AqbZQAogGdZv = aBGAyutOKI(BmpYjGAYZdp)
+	if not bglQhQTMAsOn or not AqbZQAogGdZv or not dyOGlMmymm then return end
+	local FhnGvBaLO = CFrame.new(dyOGlMmymm + Vector3.new(0, 3, 0))
+	if RilTaVMQcvUQ and RilTaVMQcvUQ.antiTeleportDetect then
+		local YSTxWXYYWF = AqbZQAogGdZv.Position
+		local DJEEpHPa = (FhnGvBaLO.Position - YSTxWXYYWF).Magnitude
+		if DJEEpHPa > 100 then
+			local iGLQfeFLLLbV = math.ceil(DJEEpHPa / 50)
+			for i = 1, iGLQfeFLLLbV do
+				local baTwVCAyvZYY = YSTxWXYYWF:Lerp(FhnGvBaLO.Position, i / iGLQfeFLLLbV)
+				AqbZQAogGdZv.CFrame = CFrame.new(baTwVCAyvZYY + Vector3.new(0, 3, 0))
+				task.wait(0.01)
+			end
+		else
+			bglQhQTMAsOn:PivotTo(FhnGvBaLO)
+		end
+	else
+		bglQhQTMAsOn:PivotTo(FhnGvBaLO)
+	end
+	CBPMnHOyDKU(function()
+		if SCjcAxJtqh then
+			local PfmEaJOAQ = ((bglQhQTMAsOn:GetAttribute(VAbjuBuaLAG("BgzqOhunsSnHc", 25)) or 0) + 1) % 100
+			bglQhQTMAsOn:SetAttribute(VAbjuBuaLAG("AfypNgtmrRmGb", 24), PfmEaJOAQ)
+			SCjcAxJtqh:FireServer(VAbjuBuaLAG("zexoMfslqQl", 23), FhnGvBaLO, bglQhQTMAsOn, PfmEaJOAQ)
+		end
+	end)
+end
+-- ============================================================
+-- 玩家功能（防封飞行引擎、飞车）
+-- ============================================================
+local wtzutQEtyx = {flyEnabled= false, flySpeed = 35, 
+	jumpEnabled = false, jumpPower = 50, infiniteJump = false,
+	wallDetectEnabled = true,   -- 射线检测墙体
+	healthLockEnabled = true,   -- 飞行中锁血，防摔死
+	flyMaxForce = 8e4,          -- 物理力上限
+}
+local KSvclZhq = {flyConn= nil, bodyVelocity = nil, bodyGyro = nil,
+	healthThread = nil, diedConn = nil, wallDetected = false,
+}
+local pxSoCZsdlh, ooHTdGhSgsB, ctnlwWsdmcm, LNJcIUGiLKf, BMKfUZRPF
+local BkMueqpmI = UDim2.new(0, 100, 0.5, -25)
+local gQuYNEheZk = nil
+CBPMnHOyDKU(function() gQuYNEheZk = require(BmpYjGAYZdp.PlayerScripts:WaitForChild(VAbjuBuaLAG("OkzxdqLnctkd", 25))):GetControls() end)
+
+local function DKuAqKddzcNg()
+	local zDYsAhamgss = sKOIMMIwuETV.CurrentCamera
+	if not zDYsAhamgss then return Vector3.zero end
+	local iDsSIyUhbMs = Vector3.zero
+	if gQuYNEheZk then
+		local xqEBSCoG = gQuYNEheZk:GetMoveVector()
+		iDsSIyUhbMs = zDYsAhamgss.CFrame.LookVector * -xqEBSCoG.Z + zDYsAhamgss.CFrame.RightVector * xqEBSCoG.X
+	else
+		if tJVkcRTg:IsKeyDown(Enum.KeyCode.W) then iDsSIyUhbMs = iDsSIyUhbMs + zDYsAhamgss.CFrame.LookVector end
+		if tJVkcRTg:IsKeyDown(Enum.KeyCode.S) then iDsSIyUhbMs = iDsSIyUhbMs - zDYsAhamgss.CFrame.LookVector end
+		if tJVkcRTg:IsKeyDown(Enum.KeyCode.A) then iDsSIyUhbMs = iDsSIyUhbMs - zDYsAhamgss.CFrame.RightVector end
+		if tJVkcRTg:IsKeyDown(Enum.KeyCode.D) then iDsSIyUhbMs = iDsSIyUhbMs + zDYsAhamgss.CFrame.RightVector end
+	end
+	if tJVkcRTg:IsKeyDown(Enum.KeyCode.Space) then iDsSIyUhbMs = iDsSIyUhbMs + Vector3.new(0, 1, 0) end
+	if tJVkcRTg:IsKeyDown(Enum.KeyCode.LeftControl) then iDsSIyUhbMs = iDsSIyUhbMs + Vector3.new(0, -1, 0) end
+	if iDsSIyUhbMs.Magnitude > 0 then iDsSIyUhbMs = iDsSIyUhbMs.Unit end
+	return iDsSIyUhbMs
+end
+
+local function JHKgIaDtj()
+	local syTtGQwE, XNNuXyFcK, AqbZQAogGdZv = aBGAyutOKI(BmpYjGAYZdp)
+	if not AqbZQAogGdZv then return end
+	CBPMnHOyDKU(function()
+		AqbZQAogGdZv:SetNetworkOwner(BmpYjGAYZdp)
+		for XNNuXyFcK, BCpcBrdRfAcZ in BplBZTGI(syTtGQwE:GetDescendants()) do
+			if BCpcBrdRfAcZ:IsA(VAbjuBuaLAG("AzrdOzqs", 25)) then BCpcBrdRfAcZ:SetNetworkOwner(BmpYjGAYZdp) end
+		end
+	end)
+end
+
+local function ZPKFIiNnXIR(enabled)
+	local XNNuXyFcK, TmixyduBOU = aBGAyutOKI(BmpYjGAYZdp)
+	if not TmixyduBOU then return end
+	if enabled then
+		CBPMnHOyDKU(function()
+			TmixyduBOU:SetStateEnabled(Enum.HumanoidStateType.Freefall, false)
+			TmixyduBOU:ChangeState(Enum.HumanoidStateType.Running)
+		end)
+	else
+		CBPMnHOyDKU(function() TmixyduBOU:SetStateEnabled(Enum.HumanoidStateType.Freefall, true) end)
+	end
+end
+-- 墙体检测（恐拜大帝射线逻辑，安全版：不锚定Head）
+local function AAuhwkrRS()
+	local XNNuXyFcK, XNNuXyFcK, AqbZQAogGdZv = aBGAyutOKI(BmpYjGAYZdp)
+	if not AqbZQAogGdZv then return false end
+	local dyOGlMmymm = AqbZQAogGdZv.Position
+	local FDyfVppP = RaycastParams.new()
+	FDyfVppP.FilterType = Enum.RaycastFilterType.Exclude
+	FDyfVppP.FilterDescendantsInstances = { BmpYjGAYZdp.Character }
+	local fRAADKydsmHd = 8
+	local HGrXQBtnxY = 3.5
+	for i = 1, fRAADKydsmHd do
+		local AsExORxFvxM = (i / fRAADKydsmHd) * 2 * math.pi
+		local zncdGmxPOdT = math.cos(AsExORxFvxM)
+		local uJTTtLTY = math.sin(AsExORxFvxM)
+		for j = -1, 1 do
+			local fZTXFEfs = Vector3.new(zncdGmxPOdT, j * 0.5, uJTTtLTY).Unit
+			local mBILWMJIPbB = sKOIMMIwuETV:Raycast(dyOGlMmymm, fZTXFEfs * HGrXQBtnxY, FDyfVppP)
+			if mBILWMJIPbB and mBILWMJIPbB.Instance and mBILWMJIPbB.Instance.CanCollide and mBILWMJIPbB.Instance.Transparency < 0.9 then
+				return true
+			end
+		end
+	end
+	return false
+end
+
+-- 锁血线程（飞行中不死）
+local function rUZhcgiIr()
+	if KSvclZhq.healthThread then return end
+	KSvclZhq.healthThread = task.spawn(function()
+		while wtzutQEtyx.flyEnabled do
+			local XNNuXyFcK, TmixyduBOU = aBGAyutOKI(BmpYjGAYZdp)
+			if TmixyduBOU and TmixyduBOU.Health <= 0 then
+				CBPMnHOyDKU(function() TmixyduBOU.Health = TmixyduBOU.MaxHealth end)
+				CBPMnHOyDKU(function() TmixyduBOU:ChangeState(Enum.HumanoidStateType.Running) end)
+			end
+			task.wait(0.1)
+		end
+		KSvclZhq.healthThread = nil
+	end)
+end
+
+local function ebfyebklxAo()
+	if KSvclZhq.healthThread then
+		task.cancel(KSvclZhq.healthThread)
+		KSvclZhq.healthThread = nil
+	end
+end
+local function yfGyrfkIU()
+	if not ooHTdGhSgsB then return end
+	ooHTdGhSgsB.Text = wtzutQEtyx.flyEnabled and VAbjuBuaLAG("飞行: 开", 1) or VAbjuBuaLAG("飞行: 关", 1)
+	ooHTdGhSgsB.TextColor3 = wtzutQEtyx.flyEnabled and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
+end
+
+local function fWcqpnIxEKCW()
+	if KSvclZhq.flyConn then KSvclZhq.flyConn:Disconnect(); KSvclZhq.flyConn = nil end
+	if KSvclZhq.bodyVelocity then KSvclZhq.bodyVelocity:Destroy(); KSvclZhq.bodyVelocity = nil end
+	if KSvclZhq.bodyGyro then KSvclZhq.bodyGyro:Destroy(); KSvclZhq.bodyGyro = nil end
+	local XNNuXyFcK, TmixyduBOU = aBGAyutOKI(BmpYjGAYZdp)
+	if TmixyduBOU then TmixyduBOU.PlatformStand = false; TmixyduBOU.AutoRotate = true end
+	ZPKFIiNnXIR(false)
+end
+
+local function LWmoBYisFXH()
+	fWcqpnIxEKCW()
+	wtzutQEtyx.flyEnabled = false
+	ebfyebklxAo()
+	if KSvclZhq.diedConn then
+		KSvclZhq.diedConn:Disconnect()
+		KSvclZhq.diedConn = nil
+	end
+	yfGyrfkIU()
+end
+
+local function vQEUJWzgTh()
+	fWcqpnIxEKCW()
+	local XNNuXyFcK, TmixyduBOU, AqbZQAogGdZv = aBGAyutOKI(BmpYjGAYZdp)
+	if not AqbZQAogGdZv or not TmixyduBOU then return end
+	wtzutQEtyx.flyEnabled = true
+	JHKgIaDtj()
+	ZPKFIiNnXIR(true)
+	
+	local FxqlsvmzqkT = Instance.new(VAbjuBuaLAG("WjytQzgjxdot", 21))
+	FxqlsvmzqkT.Name = VAbjuBuaLAG("圣奥里_EkxUdknbhsx", 25)
+	FxqlsvmzqkT.MaxForce = Vector3.new(wtzutQEtyx.flyMaxForce, wtzutQEtyx.flyMaxForce, wtzutQEtyx.flyMaxForce)
+	FxqlsvmzqkT.Velocity = Vector3.zero
+	FxqlsvmzqkT.Parent = AqbZQAogGdZv
+	KSvclZhq.bodyVelocity = FxqlsvmzqkT
+	
+	local rKRKXGuzyWC = Instance.new(VAbjuBuaLAG("WjytBtmj", 21))
+	rKRKXGuzyWC.Name = VAbjuBuaLAG("圣奥里_YerZrkh", 19)
+	rKRKXGuzyWC.MaxTorque = Vector3.new(wtzutQEtyx.flyMaxForce, wtzutQEtyx.flyMaxForce, wtzutQEtyx.flyMaxForce)
+	rKRKXGuzyWC.P = 5e3
+	rKRKXGuzyWC.Parent = AqbZQAogGdZv
+	KSvclZhq.bodyGyro = rKRKXGuzyWC
+	
+	TmixyduBOU.PlatformStand = true
+	TmixyduBOU.AutoRotate = false
+	
+	if wtzutQEtyx.healthLockEnabled then rUZhcgiIr() end
+	KSvclZhq.diedConn = TmixyduBOU.Died:Connect(function()
+		if wtzutQEtyx.flyEnabled and TmixyduBOU then
+			CBPMnHOyDKU(function()
+				TmixyduBOU.Health = TmixyduBOU.MaxHealth
+				TmixyduBOU:ChangeState(Enum.HumanoidStateType.Running)
+			end)
+		end
+	end)
+	
+	local KEcQLznz = 0
+	KSvclZhq.flyConn = SjgxIDHwarbc.RenderStepped:Connect(function(dt)
+		if not wtzutQEtyx.flyEnabled then return end
+		local XNNuXyFcK, pjEUOlDcW, gwZyKjVFCsY = aBGAyutOKI(BmpYjGAYZdp)
+		local zDYsAhamgss = sKOIMMIwuETV.CurrentCamera
+		if not gwZyKjVFCsY or not pjEUOlDcW or not zDYsAhamgss then return end
+		if KSvclZhq.bodyVelocity and KSvclZhq.bodyGyro then
+			local KdaVoIkzCt = 1
+			if wtzutQEtyx.wallDetectEnabled then
+				KSvclZhq.wallDetected = AAuhwkrRS()
+				if KSvclZhq.wallDetected then KdaVoIkzCt = 0.3 end
+			end
+			
+			local bFEnwQtSQEF = math.min(wtzutQEtyx.flySpeed, 60) * KdaVoIkzCt
+			if KEcQLznz < bFEnwQtSQEF then 
+				KEcQLznz = KEcQLznz + 2 * dt 
+			else 
+				KEcQLznz = bFEnwQtSQEF 
+			end
+			
+			local siZkUmOamwC = DKuAqKddzcNg()
+			local yukpeLaPDL = Vector3.new(math.random(-2, 2), math.random(-2, 2), math.random(-2, 2))
+			local LaWgvnth = (siZkUmOamwC * KEcQLznz) + (siZkUmOamwC.Magnitude > 0 and yukpeLaPDL * 0.1 or Vector3.zero)
+			
+			KSvclZhq.bodyVelocity.Velocity = LaWgvnth
+			KSvclZhq.bodyGyro.CFrame = zDYsAhamgss.CFrame
+			
+			if pjEUOlDcW:GetState() == Enum.HumanoidStateType.Freefall then 
+				pjEUOlDcW:ChangeState(Enum.HumanoidStateType.Running) 
+			end
+		end
+	end)
+	yfGyrfkIU()
+end
+
+local function jnabjXYHj()
+	if BMKfUZRPF then BMKfUZRPF:Disconnect(); BMKfUZRPF = nil end
+	if pxSoCZsdlh then pxSoCZsdlh:Destroy(); pxSoCZsdlh = nil; ooHTdGhSgsB = nil end
+end
+
+local function yIBipgSO()
+	jnabjXYHj()
+	if not ctnlwWsdmcm then return end
+	pxSoCZsdlh = Instance.new(VAbjuBuaLAG("RbqddmFth", 25))
+	pxSoCZsdlh.Name = VAbjuBuaLAG("NjywcpDjwOsgaiQugraf", 24)
+	pxSoCZsdlh.ResetOnSpawn = false
+	pxSoCZsdlh.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+	pxSoCZsdlh.Parent = tJgCVjycIeF or KRjgzdIIA()
+	ooHTdGhSgsB = Instance.new(VAbjuBuaLAG("QbuqYrqqlk", 23))
+	ooHTdGhSgsB.Name = VAbjuBuaLAG("NjywcpDjwZsrrml", 24)
+	ooHTdGhSgsB.Size = UDim2.new(0, 80, 0, 35)
+	ooHTdGhSgsB.Position = BkMueqpmI
+	ooHTdGhSgsB.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+	ooHTdGhSgsB.BackgroundTransparency = 0.4
+	ooHTdGhSgsB.BorderSizePixel = 0
+	ooHTdGhSgsB.Font = Enum.Font.GothamSemibold
+	ooHTdGhSgsB.TextSize = 12
+	ooHTdGhSgsB.TextWrapped = true
+	ooHTdGhSgsB.Active = not LNJcIUGiLKf
+	ooHTdGhSgsB.Draggable = not LNJcIUGiLKf
+	ooHTdGhSgsB.Selectable = not LNJcIUGiLKf
+	ooHTdGhSgsB.Parent = pxSoCZsdlh
+	local TSDZzVGIt = Instance.new(VAbjuBuaLAG("THBnqmdq", 25))
+	TSDZzVGIt.CornerRadius = UDim.new(0, 8)
+	TSDZzVGIt.Parent = ooHTdGhSgsB
+	local qdGsqhrOHZf = Instance.new(VAbjuBuaLAG("THRsqnjd", 25))
+	qdGsqhrOHZf.Name = VAbjuBuaLAG("OxfkyltPqolhb", 23)
+	qdGsqhrOHZf.Thickness = 1.5
+	qdGsqhrOHZf.Parent = ooHTdGhSgsB
+	BMKfUZRPF = SjgxIDHwarbc.RenderStepped:Connect(function()
+		if qdGsqhrOHZf.Parent then qdGsqhrOHZf.Color = KAsGVKlAl(5) end
+	end)
+	yfGyrfkIU()
+	ooHTdGhSgsB.MouseButton1Click:Connect(function()
+		if wtzutQEtyx.flyEnabled then LWmoBYisFXH() else vQEUJWzgTh() end
+	end)
+	ooHTdGhSgsB:GetPropertyChangedSignal(VAbjuBuaLAG("Nmqgrgml", 24)):Connect(function()
+		if not LNJcIUGiLKf then BkMueqpmI = ooHTdGhSgsB.Position end
+	end)
+end
+
+-- ============================================================
+-- 飞车模块（全地形物理加速）
+-- ============================================================
+local SHGIpldUMauX = {active= false, speed = 50, conn = nil, currentTarget = nil, bv = nil, bg = nil }
+local NEjvyzHSg, wxMppWIAtf, zdTQfmpS, YCnWthVNGP, twxWAgkgoOt
+local zVHdTsNz = UDim2.new(0, 10, 0.5, -25)
+
+local function UAFgmNNLpCOy()
+	if wxMppWIAtf then
+		wxMppWIAtf.Text = SHGIpldUMauX.active and VAbjuBuaLAG("飞车: 开", 1) or VAbjuBuaLAG("飞车: 关", 1)
+		wxMppWIAtf.TextColor3 = SHGIpldUMauX.active and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
+	end
+end
+
+local function uRSLbTlg()
+	SHGIpldUMauX.active = false
+	if SHGIpldUMauX.conn then SHGIpldUMauX.conn:Disconnect(); SHGIpldUMauX.conn = nil end
+	if SHGIpldUMauX.bv then SHGIpldUMauX.bv:Destroy(); SHGIpldUMauX.bv = nil end
+	if SHGIpldUMauX.bg then SHGIpldUMauX.bg:Destroy(); SHGIpldUMauX.bg = nil end
+	SHGIpldUMauX.currentTarget = nil
+	UAFgmNNLpCOy()
+end
+
+local function lGxLAYiPQPb()
+	if SHGIpldUMauX.conn then return end
+	SHGIpldUMauX.active = true
+	SHGIpldUMauX.conn = SjgxIDHwarbc.RenderStepped:Connect(function()
+		if not SHGIpldUMauX.active then return end
+		local syTtGQwE, TmixyduBOU, drwZUMCaOMGz = aBGAyutOKI(BmpYjGAYZdp)
+		if not TmixyduBOU or not drwZUMCaOMGz then return end
+		local QiJzUoRPsFqd = drwZUMCaOMGz
+		if TmixyduBOU.SeatPart then
+			local XoQKFpzyQE = TmixyduBOU.SeatPart
+			if XoQKFpzyQE:IsA(VAbjuBuaLAG("Lxtm", 19)) or XoQKFpzyQE:IsA(VAbjuBuaLAG("PybcwfyMyun", 20)) then
+				local OVICpbVec = XoQKFpzyQE:FindFirstAncestorOfClass(VAbjuBuaLAG("Jlabi", 23))
+				if OVICpbVec then QiJzUoRPsFqd = OVICpbVec.PrimaryPart or OVICpbVec:FindFirstChildWhichIsA(VAbjuBuaLAG("ZyqcNypr", 24)) or XoQKFpzyQE end
+			end
+		end
+		if SHGIpldUMauX.currentTarget ~= QiJzUoRPsFqd then
+			if SHGIpldUMauX.bv then SHGIpldUMauX.bv:Destroy() end
+			if SHGIpldUMauX.bg then SHGIpldUMauX.bg:Destroy() end
+			SHGIpldUMauX.currentTarget = QiJzUoRPsFqd
+			local FxqlsvmzqkT = Instance.new(VAbjuBuaLAG("AncxUdknbhsx", 25))
+			FxqlsvmzqkT.Name = VAbjuBuaLAG("飞车_Pyfiwcns", 20)
+			FxqlsvmzqkT.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+			FxqlsvmzqkT.Velocity = Vector3.zero
+			FxqlsvmzqkT.Parent = QiJzUoRPsFqd
+			SHGIpldUMauX.bv = FxqlsvmzqkT
+			local rKRKXGuzyWC = Instance.new(VAbjuBuaLAG("YlavDvol", 23))
+			rKRKXGuzyWC.Name = VAbjuBuaLAG("飞车_Yqjg", 18)
+			rKRKXGuzyWC.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
+			rKRKXGuzyWC.P = 9e4
+			rKRKXGuzyWC.Parent = QiJzUoRPsFqd
+			SHGIpldUMauX.bg = rKRKXGuzyWC
+		end
+		if SHGIpldUMauX.bv and SHGIpldUMauX.bg then
+			local zDYsAhamgss = sKOIMMIwuETV.CurrentCamera
+			if zDYsAhamgss then
+				local iDsSIyUhbMs = DKuAqKddzcNg()
+				SHGIpldUMauX.bg.CFrame = zDYsAhamgss.CFrame
+				SHGIpldUMauX.bv.Velocity = iDsSIyUhbMs * SHGIpldUMauX.speed
+			end
+		end
+	end)
+	UAFgmNNLpCOy()
+end
+
+local function UEGsHREI()
+	if twxWAgkgoOt then twxWAgkgoOt:Disconnect(); twxWAgkgoOt = nil end
+	if NEjvyzHSg then NEjvyzHSg:Destroy(); NEjvyzHSg = nil; wxMppWIAtf = nil end
+end
+
+local function arZsmRETZKkg()
+	UEGsHREI()
+	if not zdTQfmpS then return end
+	NEjvyzHSg = Instance.new(VAbjuBuaLAG("LvkxxgZnb", 19))
+	NEjvyzHSg.Name = VAbjuBuaLAG("TcfgajcDjwOsgaiQugraf", 24)
+	NEjvyzHSg.ResetOnSpawn = false
+	NEjvyzHSg.Parent = tJgCVjycIeF or KRjgzdIIA()
+	wxMppWIAtf = Instance.new(VAbjuBuaLAG("QbuqYrqqlk", 23))
+	wxMppWIAtf.Size = UDim2.new(0, 80, 0, 35)
+	wxMppWIAtf.Position = zVHdTsNz
+	wxMppWIAtf.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+	wxMppWIAtf.BackgroundTransparency = 0.4
+	wxMppWIAtf.BorderSizePixel = 0
+	wxMppWIAtf.Font = Enum.Font.GothamSemibold
+	wxMppWIAtf.TextSize = 12
+	wxMppWIAtf.Active = not YCnWthVNGP
+	wxMppWIAtf.Draggable = not YCnWthVNGP
+	wxMppWIAtf.Parent = NEjvyzHSg
+	local BBcwWjEj = Instance.new(VAbjuBuaLAG("THBnqmdq", 25), wxMppWIAtf); BBcwWjEj.CornerRadius = UDim.new(0, 8)
+	local ApiSIoExWoD = Instance.new(VAbjuBuaLAG("THRsqnjd", 25), wxMppWIAtf); ApiSIoExWoD.Thickness = 1.5
+	twxWAgkgoOt = SjgxIDHwarbc.RenderStepped:Connect(function()
+		if ApiSIoExWoD.Parent then ApiSIoExWoD.Color = KAsGVKlAl(5) end
+	end)
+	UAFgmNNLpCOy()
+	wxMppWIAtf.MouseButton1Click:Connect(function()
+		if SHGIpldUMauX.active then uRSLbTlg() else lGxLAYiPQPb() end
+	end)
+	wxMppWIAtf:GetPropertyChangedSignal(VAbjuBuaLAG("Nmqgrgml", 24)):Connect(function()
+		if not YCnWthVNGP then zVHdTsNz = wxMppWIAtf.Position end
+	end)
+end
+-- ============================================================
+-- 隐身悬浮窗
+-- ============================================================
+local nfLgPpJlVAt, vcFVOxCSjX, vTxlHVWknQ, ilVkWQQRoO, gatJMQPt
+local zBnQzRrKYNyT = UDim2.new(0, 100, 0.5, -25)
+local fHdGNptedwXc = false
+
+local function UqRnRPHZKn()
+	if vcFVOxCSjX then
+		vcFVOxCSjX.Text = fHdGNptedwXc and VAbjuBuaLAG("隐身: 开", 1) or VAbjuBuaLAG("隐身: 关", 1)
+		vcFVOxCSjX.TextColor3 = fHdGNptedwXc and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
+	end
+end
+
+local function VtpmXzLqgzAY(enabled)
+	local syTtGQwE = BmpYjGAYZdp.Character
+	if not syTtGQwE then return end
+	for XNNuXyFcK, obj in BplBZTGI(syTtGQwE:GetDescendants()) do
+		if obj:IsA(VAbjuBuaLAG("AzrdOzqs", 25)) and obj.Name ~= VAbjuBuaLAG("FskylmgbPmmrNypr", 24) then
+			obj.LocalTransparencyModifier = enabled and 0.55 or 0
+			obj.Material = enabled and Enum.Material.ForceField or Enum.Material.SmoothPlastic
+		elseif obj:IsA(VAbjuBuaLAG("Strpa", 15)) and obj.Name == VAbjuBuaLAG("ytvx", 19) then
+			obj.Transparency = enabled and 0.55 or 0
+		end
+	end
+end
+
+local function nTMqGGsFSgyy(enabled)
+	fHdGNptedwXc = enabled
+	VtpmXzLqgzAY(enabled)
+	if enabled then
+		CBPMnHOyDKU(function()
+			local MvGvWqzme = cRLMrzKl:FindFirstChild(VAbjuBuaLAG("Ijkvv", 16))
+			local TbLVakfALyq = MvGvWqzme and MvGvWqzme:FindFirstChild(VAbjuBuaLAG("Fiwuncihm", 20))
+			local JzDpyQeCvJtN = TbLVakfALyq and TbLVakfALyq:GetChildren()[1] or nil
+			if bduLmGQXnFQ then bduLmGQXnFQ:InvokeServer(VAbjuBuaLAG("ghcdBgzqzbsdqKnbzshnm", 25), JzDpyQeCvJtN) end
+		end)
+		SjgxIDHwarbc.RenderStepped:Connect(function()
+			if fHdGNptedwXc and BmpYjGAYZdp.Character then VtpmXzLqgzAY(true) end
+		end)
+	else
+		CBPMnHOyDKU(function()
+			if bduLmGQXnFQ then bduLmGQXnFQ:InvokeServer(VAbjuBuaLAG("ghcdBgzqzbsdqKnbzshnm", 25), false) end
+		end)
+	end
+	UqRnRPHZKn()
+end
+
+local function CuUGTOElo()
+	if gatJMQPt then gatJMQPt:Disconnect(); gatJMQPt = nil end
+	if nfLgPpJlVAt then nfLgPpJlVAt:Destroy(); nfLgPpJlVAt = nil; vcFVOxCSjX = nil end
+end
+
+local function rYSvkGKiKt()
+	CuUGTOElo()
+	if not vTxlHVWknQ then return end
+	nfLgPpJlVAt = Instance.new(VAbjuBuaLAG("OynaajCqe", 22))
+	nfLgPpJlVAt.Name = VAbjuBuaLAG("EfmqrOsgaiQugraf", 24)
+	nfLgPpJlVAt.ResetOnSpawn = false
+	nfLgPpJlVAt.Parent = tJgCVjycIeF or KRjgzdIIA()
+	vcFVOxCSjX = Instance.new(VAbjuBuaLAG("SdwsAtssnm", 25))
+	vcFVOxCSjX.Size = UDim2.new(0, 80, 0, 35)
+	vcFVOxCSjX.Position = zBnQzRrKYNyT
+	vcFVOxCSjX.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+	vcFVOxCSjX.BackgroundTransparency = 0.4
+	vcFVOxCSjX.BorderSizePixel = 0
+	vcFVOxCSjX.Font = Enum.Font.GothamSemibold
+	vcFVOxCSjX.TextSize = 12
+	vcFVOxCSjX.Active = not ilVkWQQRoO
+	vcFVOxCSjX.Draggable = not ilVkWQQRoO
+	vcFVOxCSjX.Parent = nfLgPpJlVAt
+	local TSDZzVGIt = Instance.new(VAbjuBuaLAG("THBnqmdq", 25))
+	TSDZzVGIt.CornerRadius = UDim.new(0, 8)
+	TSDZzVGIt.Parent = vcFVOxCSjX
+	local qdGsqhrOHZf = Instance.new(VAbjuBuaLAG("SGQrpmic", 24))
+	qdGsqhrOHZf.Name = VAbjuBuaLAG("NwejxksOpnkga", 22)
+	qdGsqhrOHZf.Thickness = 1.5
+	qdGsqhrOHZf.Parent = vcFVOxCSjX
+	UqRnRPHZKn()
+	gatJMQPt = SjgxIDHwarbc.RenderStepped:Connect(function()
+		if qdGsqhrOHZf.Parent then qdGsqhrOHZf.Color = KAsGVKlAl(5) end
+	end)
+	vcFVOxCSjX.MouseButton1Click:Connect(function() nTMqGGsFSgyy(not fHdGNptedwXc) end)
+	vcFVOxCSjX:GetPropertyChangedSignal(VAbjuBuaLAG("Mlpfqflk", 23)):Connect(function()
+		if not ilVkWQQRoO then zBnQzRrKYNyT = vcFVOxCSjX.Position end
+	end)
+end
+
+-- ============================================================
+-- 玩家状态
+-- ============================================================
+local TxStHdRy = {stamina= false, food = false, combatBlock = false, ghost = false,
+	noRagdoll = false, noFallDamage = false, antiPrisonPull = false,
+	autoMoney = false, infiniteAmmo = false, rapidFire = false,
+	autoCuff = false,
+}
+
+local TJRpKJfxeQQz, IblSaZRTqie, bJaXzTzf
+CBPMnHOyDKU(function()
+	local HEamqZjQeI = BmpYjGAYZdp:WaitForChild(VAbjuBuaLAG("OkzxdqRbqhosr", 25), 15):WaitForChild(VAbjuBuaLAG("Eqzldvnqj", 25), 15)
+	TJRpKJfxeQQz = require(HEamqZjQeI:WaitForChild(VAbjuBuaLAG("Zexoxzqbo", 23), 15))
+	IblSaZRTqie = require(HEamqZjQeI:WaitForChild(VAbjuBuaLAG("Zlob", 23), 15))
+	local oXMalUngya = HEamqZjQeI.Character:FindFirstChild(VAbjuBuaLAG("Ejrajpknu", 22))
+	if oXMalUngya then bJaXzTzf = require(oXMalUngya) end
+end)
+
+SjgxIDHwarbc.Heartbeat:Connect(function()
+	if IblSaZRTqie then
+		if TxStHdRy.stamina then CBPMnHOyDKU(function() IblSaZRTqie.stamina = 100 end) end
+		if TxStHdRy.food then CBPMnHOyDKU(function() IblSaZRTqie.food = 100 end) end
+	end
+	if TxStHdRy.infiniteAmmo then
+		local yQipvsOtFI = sKOIMMIwuETV:FindFirstChild(VAbjuBuaLAG("Bgzqzbsdqr", 25)) and sKOIMMIwuETV.Characters:FindFirstChild(BmpYjGAYZdp.Name)
+		if yQipvsOtFI then
+			for XNNuXyFcK, gun in BplBZTGI(yQipvsOtFI:GetChildren()) do
+				local YQyIbCXT = gun:FindFirstChild(VAbjuBuaLAG("Bnmehf", 25))
+				if YQyIbCXT then
+					local dDDkXdCvFUl = YQyIbCXT:FindFirstChild(VAbjuBuaLAG("Zlln", 25))
+					local oHMtUVUCJWIJ = YQyIbCXT:FindFirstChild(VAbjuBuaLAG("KfkrcRddf", 17))
+					if dDDkXdCvFUl then dDDkXdCvFUl.Value = math.huge end
+					if oHMtUVUCJWIJ then oHMtUVUCJWIJ.Value = math.huge end
+				end
+			end
+		end
+	end
+end)
+
+local function srOHAgGADjAa()
+	if not TxStHdRy.rapidFire or not getgc then return end
+	for XNNuXyFcK, tbl in uJExNtduzi(getgc(true)) do
+		if type(tbl) == VAbjuBuaLAG("krscv", 17) then
+			if GmgMECEcY(tbl, VAbjuBuaLAG("QFMMR_KMBC", 24)) ~= nil then gjydrQtFeioE(tbl, VAbjuBuaLAG("ODKKP_IKZA", 22), 2) end
+			if GmgMECEcY(tbl, VAbjuBuaLAG("LJG", 20)) ~= nil then gjydrQtFeioE(tbl, VAbjuBuaLAG("XVS", 6), math.huge) end
+		end
+	end
+end
+
+local eanLhzpW
+local function CmKaOpmQJ(enabled)
+	TxStHdRy.combatBlock = enabled
+	if enabled and not eanLhzpW and hookmetamethod and newcclosure then
+		eanLhzpW = hookmetamethod(game, VAbjuBuaLAG("__lykcayjj", 24), newcclosure(function(self, ...)
+			local zxArnkqflRxx = { ... }
+			local FFtFRGUPlHW = getnamecallmethod()
+			if TxStHdRy.combatBlock and FFtFRGUPlHW == VAbjuBuaLAG("EhqdRdqudq", 25) and zxArnkqflRxx[1] == VAbjuBuaLAG("amkzyrKmbc", 24) then
+				return nil
+			end
+			return eanLhzpW(self, ...)
+		end))
+	end
+end
+
+-- 防布娃娃
+CBPMnHOyDKU(function()
+	local eqGvrrwIC = require(cRLMrzKl.Modules.Ragdoll)
+	local CCmjaByFtugd = eqGvrrwIC.activate
+	eqGvrrwIC.activate = function(bglQhQTMAsOn, enable, duration, ...)
+		if TxStHdRy.noRagdoll and enable then return end
+		return CCmjaByFtugd(bglQhQTMAsOn, enable, duration, ...)
+	end
+end)
+
+-- 防摔伤
+CBPMnHOyDKU(function()
+	local hWypiJrLe = getrawmetatable(game)
+	local WFSwbXhcm = hWypiJrLe.__namecall
+	setreadonly(hWypiJrLe, false)
+	hWypiJrLe.__namecall = newcclosure(function(self, ...)
+		local zxArnkqflRxx = { ... }
+		local FFtFRGUPlHW = getnamecallmethod()
+		if TxStHdRy.noFallDamage and FFtFRGUPlHW == VAbjuBuaLAG("EhqdRdqudq", 25) and FRmGCJqvF(self) == VAbjuBuaLAG("OkzxdqDudms", 25) and zxArnkqflRxx[1] == VAbjuBuaLAG("ovfzYvhvbz", 21) then
+			return nil
+		end
+		return WFSwbXhcm(self, ...)
+	end)
+	setreadonly(hWypiJrLe, true)
+end)
+
+-- 防越狱拉回
+local DiZdtsCb, OllZdLriVC
+local function tXAQpzNSqGmW(enabled)
+	TxStHdRy.antiPrisonPull = enabled
+	CBPMnHOyDKU(function()
+		local oeobNKWnyot = require(cRLMrzKl.Modules.Algorithms)
+		if enabled and not DiZdtsCb then
+			DiZdtsCb = oeobNKWnyot.charPivotTo
+			oeobNKWnyot.charPivotTo = function() return nil end
+		elseif not enabled and DiZdtsCb then
+			oeobNKWnyot.charPivotTo = DiZdtsCb
+			DiZdtsCb = nil
+		end
+	end)
+	CBPMnHOyDKU(function()
+		if not IblSaZRTqie then return end
+		if enabled and not OllZdLriVC then
+			OllZdLriVC = IblSaZRTqie.notify
+			IblSaZRTqie.notify = function(YQyIbCXT)
+				if YQyIbCXT and YQyIbCXT.message and string.find(YQyIbCXT.message, VAbjuBuaLAG("Xnt bzm's kdzud oqhrnm xds", 25)) then return nil end
+				return OllZdLriVC(YQyIbCXT)
+			end
+		elseif not enabled and OllZdLriVC then
+			IblSaZRTqie.notify = OllZdLriVC
+			OllZdLriVC = nil
+		end
+	end)
+end
+
+-- ============================================================
+-- 战斗/自瞄/ESP 基础配置
+-- ============================================================
+local emNtiyuGlR = {auraEnabled= false, auraRange = 50, auraDamage = 5, auraInterval = 0.05,
+	auraOnlyPolice = false, auraOnlyCivilian = false, auraCombatCheck = false,
+	bulletEnabled = false, bulletFov = 360, bulletDistance = 300, bulletPart = VAbjuBuaLAG("Axtw", 19),
+	bulletShowFov = true, bulletColor = VAbjuBuaLAG("红色", 1), bulletCombatCheck = false,
+	bulletOnlyPolice = false, bulletOnlyCivilian = false,
+}
+local function MmTwcKESNEs(player, onlyPolice, onlyCivilian)
+	if not player or player == BmpYjGAYZdp then return false end
+	if onlyPolice then return player.Team and player.Team.Name == VAbjuBuaLAG("Onkhbd", 25) end
+	if onlyCivilian then return player.Team and player.Team.Name == VAbjuBuaLAG("Agtgjgyl", 24) end
+	return true
+end
+local function BrBUEjAd(player, enabled)
+	if not enabled then return true end
+	return player:GetAttribute(VAbjuBuaLAG("AmkzyrKmbc", 24)) == true or player:GetAttribute(VAbjuBuaLAG("Otqrths", 25)) == true
+end
+
+local IILUhjPWk = 0
+SjgxIDHwarbc.Heartbeat:Connect(function()
+	if not emNtiyuGlR.auraEnabled or not SCjcAxJtqh then return end
+	local qxctAawSD = tick()
+	if qxctAawSD - IILUhjPWk < emNtiyuGlR.auraInterval then return end
+	local XNNuXyFcK, XNNuXyFcK, rzxOrIGJfQru = aBGAyutOKI(BmpYjGAYZdp)
+	if not rzxOrIGJfQru then return end
+	local XsOKkbkzOwR, MMhGkztbNzFe
+	for XNNuXyFcK, player in BplBZTGI(DfrLwMIz:GetPlayers()) do
+		if MmTwcKESNEs(player, emNtiyuGlR.auraOnlyPolice, emNtiyuGlR.auraOnlyCivilian) and DAAdPNRE(player) and BrBUEjAd(player, emNtiyuGlR.auraCombatCheck) then
+			local XNNuXyFcK, XNNuXyFcK, AqbZQAogGdZv = aBGAyutOKI(player)
+			if AqbZQAogGdZv then
+				local HENcymmI = (AqbZQAogGdZv.Position - rzxOrIGJfQru.Position).Magnitude
+				if HENcymmI <= emNtiyuGlR.auraRange and (not MMhGkztbNzFe or HENcymmI < MMhGkztbNzFe) then
+					MMhGkztbNzFe = HENcymmI; XsOKkbkzOwR = player
+				end
+			end
+		end
+	end
+	if XsOKkbkzOwR then
+		local XNNuXyFcK, XNNuXyFcK, AqbZQAogGdZv = aBGAyutOKI(XsOKkbkzOwR)
+		local jFJqcDleiH = rzxOrIGJfQru.Position
+		CBPMnHOyDKU(function()
+			SCjcAxJtqh:FireServer(VAbjuBuaLAG("czlzfd", 25), {bodyParts= { { VAbjuBuaLAG("Urnq", 13), 1 } },
+				shotCode = { jFJqcDleiH, (AqbZQAogGdZv.Position - jFJqcDleiH).Unit },
+				pos = AqbZQAogGdZv.Position, target = XsOKkbkzOwR,
+				damageFactor = emNtiyuGlR.auraDamage, bulletProofTool = false,
+			})
+		end)
+		IILUhjPWk = qxctAawSD
+	end
+end)
+
+local UGQxjmeVOBf = {enabled= false, prediction = false, teamCheck = false, wallCheck = false,
+	showFov = false, showCrosshair = false, showTracer = false, friendCheck = false,
+	onlyPolice = false, onlyCivilian = false, combatCheck = false,
+	fov = 50, smoothness = 1, targetMode = VAbjuBuaLAG("准心最近", 1),
+	targetPart = VAbjuBuaLAG("头", 1), color = VAbjuBuaLAG("红色", 1), fovThickness = 2,
+}
+local qqCwDIAQcWNm = Drawing.new(VAbjuBuaLAG("Bhqbkd", 25)); qqCwDIAQcWNm.Filled = false; qqCwDIAQcWNm.NumSides = 64
+local UVcaLssOyRcI = Drawing.new(VAbjuBuaLAG("Ifkb", 23))
+local jesAjJFlAEn = {Top= Drawing.new(VAbjuBuaLAG("Dafw", 18)), Bottom = Drawing.new(VAbjuBuaLAG("Khmd", 25)),
+	Left = Drawing.new(VAbjuBuaLAG("Jglc", 24)), Right = Drawing.new(VAbjuBuaLAG("Ifkb", 23)), Center = Drawing.new(VAbjuBuaLAG("Khmd", 25))
+}
+for XNNuXyFcK, line in uJExNtduzi(jesAjJFlAEn) do line.Thickness = 2; line.Visible = false end
+local TlNCQuMcm = {
+	[VAbjuBuaLAG("头", 1)] = { VAbjuBuaLAG("Tqmp", 12) }, [VAbjuBuaLAG("胸", 1)] = { VAbjuBuaLAG("RmmboQlopl", 23), VAbjuBuaLAG("Ojmnj", 21) },
+	[VAbjuBuaLAG("左手", 1)] = { VAbjuBuaLAG("KdesGzmc", 25), VAbjuBuaLAG("Habp Wni", 22) }, [VAbjuBuaLAG("右手", 1)] = { VAbjuBuaLAG("JayzlZsfv", 18), VAbjuBuaLAG("Ofdeq Xoj", 23) },
+	[VAbjuBuaLAG("左腿", 1)] = { VAbjuBuaLAG("IbcqCllq", 23), VAbjuBuaLAG("Jcdr Jce", 24) }, [VAbjuBuaLAG("右腿", 1)] = { VAbjuBuaLAG("QhfgsEnns", 25), VAbjuBuaLAG("Pgefr Jce", 24) }
+}
+local function fkGIonpuM(syTtGQwE)
+	for XNNuXyFcK, TwthVjkl in BplBZTGI(TlNCQuMcm[UGQxjmeVOBf.targetPart] or { VAbjuBuaLAG("Xuqt", 16) }) do
+		local BCpcBrdRfAcZ = syTtGQwE:FindFirstChild(TwthVjkl)
+		if BCpcBrdRfAcZ then return BCpcBrdRfAcZ end
+	end
+	return syTtGQwE:FindFirstChild(VAbjuBuaLAG("ErjxklfaOllqMxoq", 23))
+end
+local function RQYjPezW(BCpcBrdRfAcZ)
+	if not UGQxjmeVOBf.wallCheck then return true end
+	local GDlzxiVpBrQ = sKOIMMIwuETV.CurrentCamera
+	local FDyfVppP = RaycastParams.new()
+	FDyfVppP.FilterDescendantsInstances = { BmpYjGAYZdp.Character, GDlzxiVpBrQ }
+	FDyfVppP.FilterType = Enum.RaycastFilterType.Exclude
+	FDyfVppP.IgnoreWater = true
+	local wYrhrRrsz = sKOIMMIwuETV:Raycast(GDlzxiVpBrQ.CFrame.Position, BCpcBrdRfAcZ.Position - GDlzxiVpBrQ.CFrame.Position, FDyfVppP)
+	return not wYrhrRrsz or wYrhrRrsz.Instance:IsDescendantOf(BCpcBrdRfAcZ.Parent)
+end
+local function YoMASpqgWjZ()
+	local GDlzxiVpBrQ = sKOIMMIwuETV.CurrentCamera
+	if not GDlzxiVpBrQ then return end
+	local RtWRizkNtp = Vector2.new(GDlzxiVpBrQ.ViewportSize.X / 2, GDlzxiVpBrQ.ViewportSize.Y / 2)
+	local lVzehPckmqjm, jWUVQXzHsIEg
+	for XNNuXyFcK, player in BplBZTGI(DfrLwMIz:GetPlayers()) do
+		if player ~= BmpYjGAYZdp and DAAdPNRE(player) and MmTwcKESNEs(player, UGQxjmeVOBf.onlyPolice, UGQxjmeVOBf.onlyCivilian) and BrBUEjAd(player, UGQxjmeVOBf.combatCheck) then
+			if UGQxjmeVOBf.teamCheck and BmpYjGAYZdp.Team and player.Team == BmpYjGAYZdp.Team then continue end
+			if UGQxjmeVOBf.friendCheck then
+				local hllCkNmO, GinyLiJaBPZx = CBPMnHOyDKU(function() return BmpYjGAYZdp:IsFriendsWith(player.UserId) end)
+				if hllCkNmO and GinyLiJaBPZx then continue end
+			end
+			local syTtGQwE = player.Character
+			local BCpcBrdRfAcZ = syTtGQwE and fkGIonpuM(syTtGQwE)
+			local XNNuXyFcK, TmixyduBOU, AqbZQAogGdZv = aBGAyutOKI(player)
+			if BCpcBrdRfAcZ and TmixyduBOU and AqbZQAogGdZv and RQYjPezW(BCpcBrdRfAcZ) then
+				local GAghZVAkSdpi, fMWyxHqB = GDlzxiVpBrQ:WorldToViewportPoint(BCpcBrdRfAcZ.Position)
+				if fMWyxHqB then
+					local rKLIbdfcLP = (Vector2.new(GAghZVAkSdpi.X, GAghZVAkSdpi.Y) - RtWRizkNtp).Magnitude
+					if rKLIbdfcLP <= UGQxjmeVOBf.fov then
+						local ZeLYQExCaDX
+						if UGQxjmeVOBf.targetMode == VAbjuBuaLAG("距离最近", 1) then
+							local XNNuXyFcK, XNNuXyFcK, rzxOrIGJfQru = aBGAyutOKI(BmpYjGAYZdp)
+							ZeLYQExCaDX = rzxOrIGJfQru and (rzxOrIGJfQru.Position - AqbZQAogGdZv.Position).Magnitude or math.huge
+						elseif UGQxjmeVOBf.targetMode == VAbjuBuaLAG("血量最低", 1) then ZeLYQExCaDX = TmixyduBOU.Health
+						else ZeLYQExCaDX = rKLIbdfcLP end
+						if not jWUVQXzHsIEg or ZeLYQExCaDX < jWUVQXzHsIEg then
+							jWUVQXzHsIEg = ZeLYQExCaDX
+							lVzehPckmqjm = {player= player, part = BCpcBrdRfAcZ, screen = GAghZVAkSdpi }
+						end
+					end
+				end
+			end
+		end
+	end
+	return lVzehPckmqjm
+end
+SjgxIDHwarbc.RenderStepped:Connect(function(dt)
+	local GDlzxiVpBrQ = sKOIMMIwuETV.CurrentCamera
+	if not GDlzxiVpBrQ then return end
+	local RtWRizkNtp = Vector2.new(GDlzxiVpBrQ.ViewportSize.X / 2, GDlzxiVpBrQ.ViewportSize.Y / 2)
+	local YiwUUUpYZvl = FbPUpRGgAeM(UGQxjmeVOBf.color)
+	qqCwDIAQcWNm.Position = RtWRizkNtp; qqCwDIAQcWNm.Radius = UGQxjmeVOBf.fov
+	qqCwDIAQcWNm.Thickness = UGQxjmeVOBf.fovThickness; qqCwDIAQcWNm.Color = YiwUUUpYZvl
+	qqCwDIAQcWNm.Visible = UGQxjmeVOBf.enabled and UGQxjmeVOBf.showFov
+	local RsbJkGgWj, yiwDCBki = 5, 15
+	jesAjJFlAEn.Top.From = Vector2.new(RtWRizkNtp.X, RtWRizkNtp.Y - RsbJkGgWj); jesAjJFlAEn.Top.To = Vector2.new(RtWRizkNtp.X, RtWRizkNtp.Y - RsbJkGgWj - yiwDCBki)
+	jesAjJFlAEn.Bottom.From = Vector2.new(RtWRizkNtp.X, RtWRizkNtp.Y + RsbJkGgWj); jesAjJFlAEn.Bottom.To = Vector2.new(RtWRizkNtp.X, RtWRizkNtp.Y + RsbJkGgWj + yiwDCBki)
+	jesAjJFlAEn.Left.From = Vector2.new(RtWRizkNtp.X - RsbJkGgWj, RtWRizkNtp.Y); jesAjJFlAEn.Left.To = Vector2.new(RtWRizkNtp.X - RsbJkGgWj - yiwDCBki, RtWRizkNtp.Y)
+	jesAjJFlAEn.Right.From = Vector2.new(RtWRizkNtp.X + RsbJkGgWj, RtWRizkNtp.Y); jesAjJFlAEn.Right.To = Vector2.new(RtWRizkNtp.X + RsbJkGgWj + yiwDCBki, RtWRizkNtp.Y)
+	jesAjJFlAEn.Center.From = Vector2.new(RtWRizkNtp.X - 2, RtWRizkNtp.Y); jesAjJFlAEn.Center.To = Vector2.new(RtWRizkNtp.X + 2, RtWRizkNtp.Y)
+	for XNNuXyFcK, line in uJExNtduzi(jesAjJFlAEn) do line.Color = YiwUUUpYZvl; line.Visible = UGQxjmeVOBf.showCrosshair end
+	UVcaLssOyRcI.Visible = false
+	if UGQxjmeVOBf.enabled then
+		local JzDpyQeCvJtN = YoMASpqgWjZ()
+		if JzDpyQeCvJtN then
+			if UGQxjmeVOBf.showTracer then
+				UVcaLssOyRcI.From = RtWRizkNtp; UVcaLssOyRcI.To = Vector2.new(JzDpyQeCvJtN.screen.X, JzDpyQeCvJtN.screen.Y)
+				UVcaLssOyRcI.Color = YiwUUUpYZvl; UVcaLssOyRcI.Thickness = 2; UVcaLssOyRcI.Transparency = 0.5; UVcaLssOyRcI.Visible = true
+			end
+			local cGNzHXcfiDly = JzDpyQeCvJtN.part.Position
+			if UGQxjmeVOBf.prediction then cGNzHXcfiDly = cGNzHXcfiDly + JzDpyQeCvJtN.part.AssemblyLinearVelocity * dt * 1.5 end
+			local FhnGvBaLO = CFrame.new(GDlzxiVpBrQ.CFrame.Position, cGNzHXcfiDly)
+			GDlzxiVpBrQ.CFrame = UGQxjmeVOBf.smoothness >= 1 and FhnGvBaLO or GDlzxiVpBrQ.CFrame:Lerp(FhnGvBaLO, UGQxjmeVOBf.smoothness)
+		end
+	end
+end)
+
+-- Ragebot
+local EyhbHFKv = {enabled= false, range = 150, interval = 0.05, bodyPart = VAbjuBuaLAG("Czvy", 21),
+	jobCheck = false, wallCheck = false, aliveCheck = false, combatCheck = false,
+	policeLock = false, civilianLock = false, beam = false,
+}
+local ndctqmxING = { [VAbjuBuaLAG("头部", 1)] = VAbjuBuaLAG("Xuqt", 16), [VAbjuBuaLAG("躯干", 1)] = VAbjuBuaLAG("Ojmnj", 21), [VAbjuBuaLAG("左臂", 1)] = VAbjuBuaLAG("ExymTkf", 19), [VAbjuBuaLAG("右臂", 1)] = VAbjuBuaLAG("OfdeqXoj", 23), [VAbjuBuaLAG("左腿", 1)] = VAbjuBuaLAG("FyznFya", 20), [VAbjuBuaLAG("右腿", 1)] = VAbjuBuaLAG("NecdpHac", 22) }
+local function hSQXQziXuiC(startPos, endPos)
+	local BhSDwDAI = Instance.new(VAbjuBuaLAG("Dofh", 14)); local YUJifbfeCucg = Instance.new(VAbjuBuaLAG("Hsjl", 18))
+	for XNNuXyFcK, p in BplBZTGI({ BhSDwDAI, YUJifbfeCucg }) do
+		p.Anchored = true; p.CanCollide = false; p.Transparency = 1;
+		p.Size = Vector3.new(0.1, 0.1, 0.1); p.Parent = sKOIMMIwuETV
+	end
+	BhSDwDAI.Position = startPos; YUJifbfeCucg.Position = endPos
+	local SotUoHYNDt = Instance.new(VAbjuBuaLAG("Xqqxzejbkq", 23), BhSDwDAI); local xMeZJWjFS = Instance.new(VAbjuBuaLAG("Zsszbgldms", 25), YUJifbfeCucg)
+	local DpsVUqAVlpGh = Instance.new(VAbjuBuaLAG("Adzl", 25), BhSDwDAI)
+	DpsVUqAVlpGh.Attachment0 = SotUoHYNDt; DpsVUqAVlpGh.Attachment1 = xMeZJWjFS
+	DpsVUqAVlpGh.Width0 = 0.15; DpsVUqAVlpGh.Width1 = 0.15
+	DpsVUqAVlpGh.Color = ColorSequence.new(Color3.fromRGB(180, 200, 255))
+	task.delay(0.8, function() CBPMnHOyDKU(function() BhSDwDAI:Destroy(); YUJifbfeCucg:Destroy() end) end)
+end
+task.spawn(function()
+	while true do
+		if EyhbHFKv.enabled and SCjcAxJtqh then
+			local XNNuXyFcK, XNNuXyFcK, rzxOrIGJfQru = aBGAyutOKI(BmpYjGAYZdp)
+			if rzxOrIGJfQru then
+				sCEciUgMxQg()
+				local jFJqcDleiH = rzxOrIGJfQru.Position
+				local qAAXPoQUMrWv = akwrcnEBsgzc(BmpYjGAYZdp)
+				for XNNuXyFcK, player in BplBZTGI(DfrLwMIz:GetPlayers()) do
+					if player ~= BmpYjGAYZdp and MmTwcKESNEs(player, EyhbHFKv.policeLock, EyhbHFKv.civilianLock) and BrBUEjAd(player, EyhbHFKv.combatCheck) then
+						local syTtGQwE, TmixyduBOU, AqbZQAogGdZv = aBGAyutOKI(player)
+						if syTtGQwE and TmixyduBOU and AqbZQAogGdZv and TmixyduBOU.Health > 0 then
+							if EyhbHFKv.jobCheck and akwrcnEBsgzc(player) == qAAXPoQUMrWv then continue end
+							if (AqbZQAogGdZv.Position - jFJqcDleiH).Magnitude <= EyhbHFKv.range then
+								if EyhbHFKv.wallCheck then
+									local FDyfVppP = RaycastParams.new()
+									FDyfVppP.FilterDescendantsInstances = { BmpYjGAYZdp.Character, sKOIMMIwuETV.CurrentCamera }
+									FDyfVppP.FilterType = Enum.RaycastFilterType.Exclude
+									local wYrhrRrsz = sKOIMMIwuETV:Raycast(sKOIMMIwuETV.CurrentCamera.CFrame.Position, AqbZQAogGdZv.Position - sKOIMMIwuETV.CurrentCamera.CFrame.Position, FDyfVppP)
+									if wYrhrRrsz and not wYrhrRrsz.Instance:IsDescendantOf(syTtGQwE) then continue end
+								end
+								CBPMnHOyDKU(function()
+									SCjcAxJtqh:FireServer(VAbjuBuaLAG("bykyec", 24), {bodyParts= { { EyhbHFKv.bodyPart, 1 } },
+										shotCode = { jFJqcDleiH, (AqbZQAogGdZv.Position - jFJqcDleiH).Unit },
+										pos = AqbZQAogGdZv.Position, target = player,
+										damageFactor = 1.5, bulletProofTool = false,
+									})
+									if EyhbHFKv.beam then hSQXQziXuiC(jFJqcDleiH, AqbZQAogGdZv.Position) end
+								end)
+							end
+						end
+					end
+				end
+			end
+		end
+		task.wait(EyhbHFKv.interval)
+	end
+end)
+
+-- Hitbox 范围
+local HuFdzhQostMA = {active= false, size = 10, transparency = 0.7, teamCheck = false,
+	color = VAbjuBuaLAG("红色", 1), material = VAbjuBuaLAG("Lcml", 24), rainbow = false, checkCorpses = false,
+	outline = false, collision = false, glow = false, pulse = false, affectNPC = false,
+}
+local hUfWCOzJyCea = {}
+local function WCCtnSwRBQJ(syTtGQwE)
+	local AqbZQAogGdZv = syTtGQwE and syTtGQwE:FindFirstChild(VAbjuBuaLAG("ErjxklfaOllqMxoq", 23))
+	if not AqbZQAogGdZv then return end
+	local RLJNUKqlPEsW = hUfWCOzJyCea[AqbZQAogGdZv]
+	if RLJNUKqlPEsW then
+		AqbZQAogGdZv.Size = RLJNUKqlPEsW.Size; AqbZQAogGdZv.Transparency = RLJNUKqlPEsW.Transparency
+		AqbZQAogGdZv.Material = RLJNUKqlPEsW.Material; AqbZQAogGdZv.CanCollide = RLJNUKqlPEsW.CanCollide; AqbZQAogGdZv.Color = RLJNUKqlPEsW.Color
+	end
+	local fjZEAyDdIP = AqbZQAogGdZv:FindFirstChild(VAbjuBuaLAG("乔尼_GhsanwGhfgkhfgs", 25)); if fjZEAyDdIP then fjZEAyDdIP:Destroy() end
+	local BVnzrclA = AqbZQAogGdZv:FindFirstChild(VAbjuBuaLAG("乔尼_FgrzmvJgefr", 24)); if BVnzrclA then BVnzrclA:Destroy() end
+end
+local function RFNtugzB(syTtGQwE)
+	local AqbZQAogGdZv = syTtGQwE and syTtGQwE:FindFirstChild(VAbjuBuaLAG("FskylmgbPmmrNypr", 24))
+	if not AqbZQAogGdZv then return end
+	if not hUfWCOzJyCea[AqbZQAogGdZv] then
+		hUfWCOzJyCea[AqbZQAogGdZv] = {Size= AqbZQAogGdZv.Size, Transparency = AqbZQAogGdZv.Transparency, Material = AqbZQAogGdZv.Material, CanCollide = AqbZQAogGdZv.CanCollide, Color = AqbZQAogGdZv.Color }
+	end
+	if not HuFdzhQostMA.active then WCCtnSwRBQJ(syTtGQwE); return end
+	local TmixyduBOU = syTtGQwE:FindFirstChildOfClass(VAbjuBuaLAG("Gtlzmnhc", 25))
+	if HuFdzhQostMA.checkCorpses and TmixyduBOU and TmixyduBOU.Health <= 0 then WCCtnSwRBQJ(syTtGQwE); return end
+	local yiwDCBki = HuFdzhQostMA.size
+	if HuFdzhQostMA.pulse then yiwDCBki = yiwDCBki * (math.sin(tick() * 2) * 0.2 + 1) end
+	AqbZQAogGdZv.Size = Vector3.new(yiwDCBki, yiwDCBki, yiwDCBki)
+	AqbZQAogGdZv.Transparency = HuFdzhQostMA.transparency
+	AqbZQAogGdZv.Material = Enum.Material[HuFdzhQostMA.material] or Enum.Material.Neon
+	AqbZQAogGdZv.CanCollide = HuFdzhQostMA.collision
+	AqbZQAogGdZv.Color = HuFdzhQostMA.rainbow and KAsGVKlAl(5) or FbPUpRGgAeM(HuFdzhQostMA.color)
+	if HuFdzhQostMA.outline then
+		local tymbYIcTY = AqbZQAogGdZv:FindFirstChild(VAbjuBuaLAG("乔尼_DepxktDecdhecdp", 22)) or Instance.new(VAbjuBuaLAG("Bcabfcabn", 20))
+		tymbYIcTY.Name = VAbjuBuaLAG("乔尼_GhsanwGhfgkhfgs", 25); tymbYIcTY.FillTransparency = 1; tymbYIcTY.OutlineColor = AqbZQAogGdZv.Color
+		tymbYIcTY.OutlineTransparency = HuFdzhQostMA.transparency; tymbYIcTY.Parent = AqbZQAogGdZv
+	else
+		local tymbYIcTY = AqbZQAogGdZv:FindFirstChild(VAbjuBuaLAG("乔尼_BcnvirBcabfcabn", 20)); if tymbYIcTY then tymbYIcTY:Destroy() end
+	end
+	if HuFdzhQostMA.glow then
+		local cwUrnIRzwlMn = AqbZQAogGdZv:FindFirstChild(VAbjuBuaLAG("乔尼_GhsanwKhfgs", 25)) or Instance.new(VAbjuBuaLAG("IhbgmEbzam", 19))
+		cwUrnIRzwlMn.Name = VAbjuBuaLAG("乔尼_GhsanwKhfgs", 25); cwUrnIRzwlMn.Brightness = 5; cwUrnIRzwlMn.Range = 15; cwUrnIRzwlMn.Color = AqbZQAogGdZv.Color; cwUrnIRzwlMn.Parent = AqbZQAogGdZv
+	else
+		local cwUrnIRzwlMn = AqbZQAogGdZv:FindFirstChild(VAbjuBuaLAG("乔尼_FgrzmvJgefr", 24)); if cwUrnIRzwlMn then cwUrnIRzwlMn:Destroy() end
+	end
+end
+SjgxIDHwarbc.Heartbeat:Connect(function()
+	for XNNuXyFcK, player in BplBZTGI(DfrLwMIz:GetPlayers()) do
+		if player ~= BmpYjGAYZdp and player.Character then
+			if HuFdzhQostMA.teamCheck and BmpYjGAYZdp.Team and player.Team == BmpYjGAYZdp.Team then WCCtnSwRBQJ(player.Character)
+			else RFNtugzB(player.Character) end
+		end
+	end
+	if HuFdzhQostMA.affectNPC then
+		for XNNuXyFcK, obj in BplBZTGI(sKOIMMIwuETV:GetDescendants()) do
+			if obj:IsA(VAbjuBuaLAG("Cetub", 16)) and obj:FindFirstChildOfClass(VAbjuBuaLAG("Fskylmgb", 24)) and not DfrLwMIz:GetPlayerFromCharacter(obj) then RFNtugzB(obj) end
+		end
+	end
+end)
+
+-- ESP
+local tBQTKqrG = {enabled= false, name = true, distance = true, health = true, highlight = true,
+	tracer = false, tracerOrigin = VAbjuBuaLAG("屏幕底部", 1), showFugitive = true,
+	selectedTeams = {Chef= true, Civilian = true, Delivery = true, Farmer = true, Fire = true, Police = true, Medical = true, Prisoner = true, [VAbjuBuaLAG("Nkwz Oanreya", 22)] = true, Transit = true },
+	trackers = {},
+}
+local UmDvqQJd = {Chef= VAbjuBuaLAG("厨师", 1), Civilian = VAbjuBuaLAG("平民", 1), Delivery = VAbjuBuaLAG("配送员", 1), Farmer = VAbjuBuaLAG("农民", 1), Fire = VAbjuBuaLAG("消防员", 1), Police = VAbjuBuaLAG("警察", 1), Medical = VAbjuBuaLAG("医护人员", 1), Prisoner = VAbjuBuaLAG("囚犯", 1), [VAbjuBuaLAG("Olxa Pbosfzb", 23)] = VAbjuBuaLAG("道路服务", 1), Transit = VAbjuBuaLAG("交通", 1) }
+local KmHmJJViaxD = {Chef= Color3.fromRGB(255, 200, 0), Civilian = Color3.fromRGB(100, 200, 255),
+	Delivery = Color3.fromRGB(255, 150, 50), Farmer = Color3.fromRGB(50, 200, 50),
+	Fire = Color3.fromRGB(255, 50, 50), Police = Color3.fromRGB(50, 100, 255),
+	Medical = Color3.fromRGB(255, 50, 255), Prisoner = Color3.fromRGB(255, 150, 150),
+	[VAbjuBuaLAG("Pmyb Qcptgac", 24)] = Color3.fromRGB(255, 255, 100), Transit = Color3.fromRGB(100, 255, 255)
+}
+local function NpYDtAgMuN(player) return player.Team and player.Team.Name == VAbjuBuaLAG("Bhuhkhzm", 25) and (player:GetAttribute(VAbjuBuaLAG("BnlazsLncd", 25)) or player:GetAttribute(VAbjuBuaLAG("Hmjkmal", 18))) end
+local function ejCKNZvos(player)
+	if not tBQTKqrG.enabled or player == BmpYjGAYZdp or not player.Character then return false end
+	if tBQTKqrG.showFugitive and NpYDtAgMuN(player) then return true end
+	local gtliHpSOnx = player.Team and player.Team.Name
+	return gtliHpSOnx and tBQTKqrG.selectedTeams[gtliHpSOnx] == true
+end
+local function RDfOtAwbYHv(player)
+	local tVylUOYuA = tBQTKqrG.trackers[player]
+	if not tVylUOYuA then return end
+	for XNNuXyFcK, obj in uJExNtduzi(tVylUOYuA) do
+		CBPMnHOyDKU(function()
+			if typeof(obj) == VAbjuBuaLAG("NXTOynelpYkjjaypekj", 22) then obj:Disconnect()
+			elseif typeof(obj) == VAbjuBuaLAG("Glqrylac", 24) then obj:Destroy()
+			elseif type(obj) == VAbjuBuaLAG("trdqczsz", 25) and obj.Remove then obj:Remove() end
+		end)
+	end
+	tBQTKqrG.trackers[player] = nil
+end
+local function PvclVFjgYc(player)
+	RDfOtAwbYHv(player)
+	if not ejCKNZvos(player) then return end
+	local syTtGQwE = player.Character
+	local AqbZQAogGdZv = syTtGQwE and syTtGQwE:FindFirstChild(VAbjuBuaLAG("GtlzmnhcQnnsOzqs", 25))
+	if not AqbZQAogGdZv then return end
+	local SinbYRJq = tJgCVjycIeF or KRjgzdIIA()
+	if not SinbYRJq then return end
+	local cOJJteusUv = Instance.new(VAbjuBuaLAG("ZgjjzmypbEsg", 24))
+	cOJJteusUv.Name = VAbjuBuaLAG("NjywcpCQN_", 24) .. player.Name; cOJJteusUv.AlwaysOnTop = true
+	cOJJteusUv.Size = UDim2.new(4, 0, 4, 0); cOJJteusUv.StudsOffset = Vector3.new(0, 3, 0)
+	cOJJteusUv.Adornee = AqbZQAogGdZv; cOJJteusUv.Parent = SinbYRJq
+	local aRQxglSZyf = Instance.new(VAbjuBuaLAG("Eqzld", 25)); aRQxglSZyf.BackgroundTransparency = 1; aRQxglSZyf.Size = UDim2.fromScale(1, 1); aRQxglSZyf.Parent = cOJJteusUv
+	local TwthVjkl = Instance.new(VAbjuBuaLAG("PatpHwxah", 22)); TwthVjkl.Size = UDim2.new(1, 0, 0.5, 0); TwthVjkl.BackgroundTransparency = 1
+	TwthVjkl.Font = Enum.Font.SourceSansBold; TwthVjkl.TextSize = 14; TwthVjkl.TextStrokeTransparency = 0.5; TwthVjkl.Parent = aRQxglSZyf
+	local IkNJshCwXb = Instance.new(VAbjuBuaLAG("JunjBqrub", 16)); IkNJshCwXb.Size = UDim2.new(1, 0, 0.5, 0); IkNJshCwXb.Position = UDim2.new(0, 0, 0.5, 0)
+	IkNJshCwXb.BackgroundTransparency = 1; IkNJshCwXb.Font = Enum.Font.SourceSans; IkNJshCwXb.TextSize = 12; IkNJshCwXb.TextStrokeTransparency = 0.5; IkNJshCwXb.Parent = aRQxglSZyf
+	local CGATUidac = Instance.new(VAbjuBuaLAG("Ghfgkhfgs", 25)); CGATUidac.Name = VAbjuBuaLAG("OkzxdqDRO_Ghfgkhfgs", 25); CGATUidac.Adornee = syTtGQwE
+	CGATUidac.FillTransparency = 0.7; CGATUidac.OutlineTransparency = 0; CGATUidac.Parent = SinbYRJq
+	local oCtSaJMrPSn = Drawing.new(VAbjuBuaLAG("Vsxo", 10)); oCtSaJMrPSn.Thickness = 1; oCtSaJMrPSn.Transparency = 0.5; oCtSaJMrPSn.Visible = false
+	local sbYkryEodOVr = SjgxIDHwarbc.Heartbeat:Connect(function()
+		if not ejCKNZvos(player) or not player.Character or not AqbZQAogGdZv.Parent then
+			oCtSaJMrPSn.Visible = false; if cOJJteusUv.Parent then cOJJteusUv.Enabled = false end; return
+		end
+		cOJJteusUv.Enabled = true
+		local lAcJhKSMs = tBQTKqrG.showFugitive and NpYDtAgMuN(player)
+		local gtliHpSOnx = player.Team and player.Team.Name
+		local YiwUUUpYZvl = lAcJhKSMs and Color3.fromRGB(255, 0, 0) or KmHmJJViaxD[gtliHpSOnx] or Color3.fromRGB(0, 255, 0)
+		local uZYupKauDY = lAcJhKSMs and VAbjuBuaLAG("逃犯", 1) or UmDvqQJd[gtliHpSOnx] or (gtliHpSOnx or VAbjuBuaLAG("未知", 1))
+		TwthVjkl.Text = VAbjuBuaLAG("[", 1) .. uZYupKauDY .. VAbjuBuaLAG("] ", 1) .. player.Name; TwthVjkl.TextColor3 = YiwUUUpYZvl; TwthVjkl.Visible = tBQTKqrG.name
+		CGATUidac.FillColor = YiwUUUpYZvl; CGATUidac.OutlineColor = YiwUUUpYZvl; CGATUidac.Enabled = tBQTKqrG.highlight
+		local XNNuXyFcK, TmixyduBOU = aBGAyutOKI(player)
+		local XNNuXyFcK, XNNuXyFcK, rzxOrIGJfQru = aBGAyutOKI(BmpYjGAYZdp)
+		local BVLYCMGRKXNW = {}
+		if tBQTKqrG.distance and rzxOrIGJfQru then table.insert(BVLYCMGRKXNW, string.format(VAbjuBuaLAG("%.5d", 24), (rzxOrIGJfQru.Position - AqbZQAogGdZv.Position).Magnitude)) end
+		if tBQTKqrG.health and TmixyduBOU then table.insert(BVLYCMGRKXNW, FRmGCJqvF(math.floor(TmixyduBOU.Health))) end
+		IkNJshCwXb.Text = #BVLYCMGRKXNW > 0 and (VAbjuBuaLAG("[", 1) .. table.concat(BVLYCMGRKXNW, VAbjuBuaLAG("/", 1)) .. VAbjuBuaLAG("]", 1)) or VAbjuBuaLAG("", 1)
+		IkNJshCwXb.TextColor3 = YiwUUUpYZvl; IkNJshCwXb.Visible = tBQTKqrG.distance or tBQTKqrG.health
+		local zDYsAhamgss = sKOIMMIwuETV.CurrentCamera
+		if tBQTKqrG.tracer and zDYsAhamgss then
+			local GAghZVAkSdpi, fMWyxHqB = zDYsAhamgss:WorldToViewportPoint(AqbZQAogGdZv.Position)
+			if fMWyxHqB then
+				local zExmhYqxUqmG = zDYsAhamgss.ViewportSize
+				if tBQTKqrG.tracerOrigin == VAbjuBuaLAG("屏幕中心", 1) then oCtSaJMrPSn.From = Vector2.new(zExmhYqxUqmG.X / 2, zExmhYqxUqmG.Y / 2)
+				elseif tBQTKqrG.tracerOrigin == VAbjuBuaLAG("屏幕顶部", 1) then oCtSaJMrPSn.From = Vector2.new(zExmhYqxUqmG.X / 2, 0)
+				else oCtSaJMrPSn.From = Vector2.new(zExmhYqxUqmG.X / 2, zExmhYqxUqmG.Y) end
+				oCtSaJMrPSn.To = Vector2.new(GAghZVAkSdpi.X, GAghZVAkSdpi.Y); oCtSaJMrPSn.Color = YiwUUUpYZvl; oCtSaJMrPSn.Visible = true
+			else oCtSaJMrPSn.Visible = false end
+		else oCtSaJMrPSn.Visible = false end
+	end)
+	tBQTKqrG.trackers[player] = {bill= cOJJteusUv, highlight = CGATUidac, tracer = oCtSaJMrPSn, update = sbYkryEodOVr }
+end
+local function YFsRNGKO()
+	for player in uJExNtduzi(tBQTKqrG.trackers) do
+		if not ejCKNZvos(player) then RDfOtAwbYHv(player) end
+	end
+	if tBQTKqrG.enabled then
+		for XNNuXyFcK, player in BplBZTGI(DfrLwMIz:GetPlayers()) do
+			if player ~= BmpYjGAYZdp and ejCKNZvos(player) and not tBQTKqrG.trackers[player] then PvclVFjgYc(player) end
+		end
+	end
+end
+DfrLwMIz.PlayerAdded:Connect(function(player)
+	player.CharacterAdded:Connect(function() task.wait(0.5); if tBQTKqrG.enabled then PvclVFjgYc(player) end end)
+end)
+DfrLwMIz.PlayerRemoving:Connect(RDfOtAwbYHv)
+SjgxIDHwarbc.Heartbeat:Connect(function() if tBQTKqrG.enabled then YFsRNGKO() end end)
+
+-- 警察自动铐
+local tzcppRKh = {range= 200, delay = 0.5, combatCheck = false, teleport = false }
+local fyYFgxmAfo
+local function wfTjJeOGrRfp()
+	if fyYFgxmAfo then return end
+	fyYFgxmAfo = task.spawn(function()
+		while TxStHdRy.autoCuff do
+			local XNNuXyFcK, XNNuXyFcK, rzxOrIGJfQru = aBGAyutOKI(BmpYjGAYZdp)
+			if rzxOrIGJfQru and bduLmGQXnFQ then
+				for XNNuXyFcK, player in BplBZTGI(DfrLwMIz:GetPlayers()) do
+					if player ~= BmpYjGAYZdp and DAAdPNRE(player) and BrBUEjAd(player, tzcppRKh.combatCheck) then
+						local XNNuXyFcK, XNNuXyFcK, AqbZQAogGdZv = aBGAyutOKI(player)
+						if AqbZQAogGdZv and (AqbZQAogGdZv.Position - rzxOrIGJfQru.Position).Magnitude <= tzcppRKh.range then
+							CBPMnHOyDKU(function() bduLmGQXnFQ:InvokeServer(VAbjuBuaLAG("cviyxpaa", 21), player, false) end)
+						end
+					end
+				end
+			end
+			task.wait(tzcppRKh.delay + math.random() * 0.2)
+		end
+		fyYFgxmAfo = nil
+	end)
+end
+
+-- 刷钱：自动捡钱
+local function oXqUcVSsQT(prompt)
+	if not prompt or not prompt.Parent then return end
+	local zqhGcBMGt = prompt.Parent
+	if zqhGcBMGt:IsA(VAbjuBuaLAG("ZyqcNypr", 24)) then return zqhGcBMGt.Position end
+	if zqhGcBMGt:IsA(VAbjuBuaLAG("Voovxchzio", 21)) then return zqhGcBMGt.WorldPosition end
+	if zqhGcBMGt:IsA(VAbjuBuaLAG("Jlabi", 23)) then
+		local BCpcBrdRfAcZ = zqhGcBMGt.PrimaryPart or zqhGcBMGt:FindFirstChildWhichIsA(VAbjuBuaLAG("WvnzKvmo", 21))
+		if BCpcBrdRfAcZ then return BCpcBrdRfAcZ.Position end
+	end
+end
+local function vMIRQzLmXL(prompt)
+	if not prompt then return end
+	CBPMnHOyDKU(function()
+		if fireproximityprompt then fireproximityprompt(prompt, 0)
+		else prompt.HoldDuration = 0; prompt:InputHoldBegin(); task.wait(0.1); prompt:InputHoldEnd() end
+	end)
+end
+task.spawn(function()
+	while true do
+		if TxStHdRy.autoMoney then
+			local XNNuXyFcK, XNNuXyFcK, AqbZQAogGdZv = aBGAyutOKI(BmpYjGAYZdp)
+			if AqbZQAogGdZv then
+				local ddyyjFEB, jxvbLJGNVEM
+				for XNNuXyFcK, obj in BplBZTGI(sKOIMMIwuETV:GetDescendants()) do
+					if obj:IsA(VAbjuBuaLAG("NpmvgkgrwNpmknr", 24)) and (obj.Name == VAbjuBuaLAG("BzrgCqno", 25) or obj.Name == VAbjuBuaLAG("YwlAlwe", 18)) then
+						local dyOGlMmymm = oXqUcVSsQT(obj)
+						if dyOGlMmymm then
+							local HENcymmI = (AqbZQAogGdZv.Position - dyOGlMmymm).Magnitude
+							if not jxvbLJGNVEM or HENcymmI < jxvbLJGNVEM then jxvbLJGNVEM = HENcymmI; ddyyjFEB = obj end
+						end
+					end
+				end
+				if ddyyjFEB and jxvbLJGNVEM and jxvbLJGNVEM < 60 then
+					if jxvbLJGNVEM > 8 then CpKTuGpwfMHc(oXqUcVSsQT(ddyyjFEB)); task.wait(0.3) end
+					vMIRQzLmXL(ddyyjFEB)
+				end
+			end
+		end
+		task.wait(0.3 + math.random() * 0.2)
+	end
+end)
+
+-- ============================================================
+-- UI 主窗口
+-- ============================================================
+local function NHzaHBBTEGu()
+	if zYXqEscWmgGW then CBPMnHOyDKU(function() zYXqEscWmgGW:Destroy() end) zYXqEscWmgGW = nil end
+	zYXqEscWmgGW = TwzExeCq:CreateWindow({Title= VAbjuBuaLAG("乔尼 Gta/圣奥里<enms bnknq='#55EE55'>精简版</enms>", 25),
+		Icon = VAbjuBuaLAG("ope", 15), IconTransparency = 0.5, IconThemed = true, Author = VAbjuBuaLAG("乔尼", 1),
+		Folder = VAbjuBuaLAG("乔尼", 1), Size = UDim2.fromOffset(640, 460), Transparent = true, Theme = VAbjuBuaLAG("Vsjc", 18),
+		User = {Enabled= false, Callback = function() end, Anonymous = false },
+		SideBarWidth = 200, ScrollBarEnabled = true, Background = uWZHbQRWkQtk(),
+		BackgroundImageTransparency = 0.4,
+	})
+	ujDXuBpAgmgs = true
+	local knjtgaLYpU = zYXqEscWmgGW.Parent
+	if knjtgaLYpU then
+		local function adhUCEhWeaJj(obj)
+			if obj:IsA(VAbjuBuaLAG("SdwsKzadk", 25)) or obj:IsA(VAbjuBuaLAG("SdwsAtssnm", 25)) then
+				if obj.Font ~= Enum.Font.Code then obj.Font = Enum.Font.PermanentMarker end
+			end
+		end
+		for XNNuXyFcK, v in BplBZTGI(knjtgaLYpU:GetDescendants()) do adhUCEhWeaJj(v) end
+		knjtgaLYpU.DescendantAdded:Connect(adhUCEhWeaJj)
+	end
+	local iRrVWNiCEeHi = zYXqEscWmgGW:Tag({Title= VAbjuBuaLAG("当前时间: 11:11:11", 1), Icon = VAbjuBuaLAG("ajmai", 24), Color = Color3.fromHex(VAbjuBuaLAG("#EEEEEE", 25)), Border = true })
+	local XhMGrAgLSRow = 0
+	SjgxIDHwarbc.Heartbeat:Connect(function()
+		if tick() - XhMGrAgLSRow >= 0.1 then
+			iRrVWNiCEeHi:SetTitle(VAbjuBuaLAG("当前时间: ", 1) .. os.date(VAbjuBuaLAG("!%D:%I:%O", 22), os.time() + 28800))
+			XhMGrAgLSRow = tick()
+		end
+	end)
+	zYXqEscWmgGW:EditOpenButton({Title= VAbjuBuaLAG("乔尼<bkjp ykhkn='#22BB22'>3.2</bkjp>", 22), Icon = VAbjuBuaLAG("wliqh", 20), CornerRadius = UDim.new(1, 16),
+		StrokeThickness = 1.5, Color = ColorSequence.new({
+			ColorSequenceKeypoint.new(0, Color3.fromHex(VAbjuBuaLAG("RR3615", 12))), ColorSequenceKeypoint.new(0.3, Color3.fromHex(VAbjuBuaLAG("SS92O7", 13))),
+			ColorSequenceKeypoint.new(0.6, Color3.fromHex(VAbjuBuaLAG("TTP0Q5", 14))), ColorSequenceKeypoint.new(1, Color3.fromHex(VAbjuBuaLAG("CCZ3ZY", 23))),
+		}), Draggable = true,
+	})
+	local mTAyqMEi = zYXqEscWmgGW.UIElements.Main
+	if mTAyqMEi then
+		local qdGsqhrOHZf = Instance.new(VAbjuBuaLAG("SGQrpmic", 24))
+		qdGsqhrOHZf.Name = VAbjuBuaLAG("JxfkYloabo", 23); qdGsqhrOHZf.Thickness = 3
+		qdGsqhrOHZf.ApplyStrokeMode = Enum.ApplyStrokeMode.Border; qdGsqhrOHZf.LineJoinMode = Enum.LineJoinMode.Round
+		qdGsqhrOHZf.Enabled = vRtfaayOJA.borderEnabled; qdGsqhrOHZf.Parent = mTAyqMEi
+		local EZinstEdUm = Instance.new(VAbjuBuaLAG("SGEpybgclr", 24)); EZinstEdUm.Name = VAbjuBuaLAG("ZmpbcpEpybgclr", 24); EZinstEdUm.Parent = qdGsqhrOHZf
+		qoLUDVxBlf(nil, vRtfaayOJA.isBorderRainbow ~= false)
+	end
+
+	local juojMnbjP = zYXqEscWmgGW:Tab({Title= VAbjuBuaLAG("主页", 1), Icon = VAbjuBuaLAG("dkia", 22), Locked = false })
+	juojMnbjP:Paragraph({Title= VAbjuBuaLAG("乔尼 era", 23), Desc = VAbjuBuaLAG("圣奥里精简版", 1), Image = VAbjuBuaLAG("lmb", 12), ImageSize = 32 })
+	juojMnbjP:Paragraph({Title= VAbjuBuaLAG("玩家", 1), Desc = VAbjuBuaLAG("当前服务器DY: ", 21) .. game.PlaceId, Image = VAbjuBuaLAG("sqcpq", 24), ImageSize = 32 })
+
+	local EiBuKTYONP = zYXqEscWmgGW:Tab({Title= VAbjuBuaLAG("HV设置", 13), Icon = VAbjuBuaLAG("nzoodibn", 21), Locked = false })
+	EiBuKTYONP:Toggle({Title= VAbjuBuaLAG("自定义光标", 1), Value = false, Callback = function(v) zYXqEscWmgGW:ToggleCustomCursor(v) end })
+	EiBuKTYONP:Dropdown({Title= VAbjuBuaLAG("通知位置", 1), Values = {VAbjuBuaLAG("左", 1),VAbjuBuaLAG("右", 1)}, Value = VAbjuBuaLAG("右", 1), Callback = function(v) TwzExeCq:SetNotifySide(v == VAbjuBuaLAG("左", 1) and VAbjuBuaLAG("Gzao", 21) or VAbjuBuaLAG("Pgefr", 24)) end })
+	EiBuKTYONP:Dropdown({Title= VAbjuBuaLAG("ZLE缩放", 22), Values = {VAbjuBuaLAG("61%", 1),VAbjuBuaLAG("86%", 1),VAbjuBuaLAG("211%", 1),VAbjuBuaLAG("236%", 1),VAbjuBuaLAG("261%", 1),VAbjuBuaLAG("286%", 1),VAbjuBuaLAG("311%", 1)}, Value = VAbjuBuaLAG("211%", 1), Callback = function(v)
+		local hBFZWAEm = lDXybxwNXFk(v:gsub(VAbjuBuaLAG("%%", 1), VAbjuBuaLAG("", 1))); if hBFZWAEm then zYXqEscWmgGW:SetDPIScale(hBFZWAEm / 100) end
+	end })
+	EiBuKTYONP:Keybind({Title= VAbjuBuaLAG("菜单按键", 1), Value = VAbjuBuaLAG("PgefrQfgdr", 24), Callback = function(v) zYXqEscWmgGW:SetToggleKey(Enum.KeyCode[v]) end })
+	EiBuKTYONP:Divider()
+	EiBuKTYONP:Toggle({Title= VAbjuBuaLAG("随机背景图", 1), Value = vRtfaayOJA.randomBg, Callback = function(v) vRtfaayOJA.randomBg = v; GcRMMwdfC(); NHzaHBBTEGu() end })
+	EiBuKTYONP:Divider()
+	EiBuKTYONP:Toggle({Title= VAbjuBuaLAG("启用边框颜色", 1), Value = vRtfaayOJA.borderEnabled, Callback = function(v)
+		vRtfaayOJA.borderEnabled = v; GcRMMwdfC()
+		local MCDVPwgZ = zYXqEscWmgGW and zYXqEscWmgGW.UIElements and zYXqEscWmgGW.UIElements.Main
+		local ApiSIoExWoD = MCDVPwgZ and MCDVPwgZ:FindFirstChild(VAbjuBuaLAG("AowbPcfrsf", 14)); if ApiSIoExWoD then ApiSIoExWoD.Enabled = v end
+	end })
+	EiBuKTYONP:Dropdown({Title= VAbjuBuaLAG("边框颜色", 1), Values = {VAbjuBuaLAG("旋转彩虹", 1),VAbjuBuaLAG("默认白色", 1),VAbjuBuaLAG("红色", 1),VAbjuBuaLAG("橙色", 1),VAbjuBuaLAG("黄色", 1),VAbjuBuaLAG("绿色", 1),VAbjuBuaLAG("青色", 1),VAbjuBuaLAG("蓝色", 1),VAbjuBuaLAG("紫色", 1),VAbjuBuaLAG("粉色", 1)},
+		Value = vRtfaayOJA.isBorderRainbow and VAbjuBuaLAG("旋转彩虹", 1) or VAbjuBuaLAG("默认白色", 1), Callback = function(v)
+			if v == VAbjuBuaLAG("旋转彩虹", 1) then qoLUDVxBlf(nil, true)
+			elseif v == VAbjuBuaLAG("默认白色", 1) then qoLUDVxBlf(Color3.new(1, 1, 1), false)
+			else qoLUDVxBlf(FbPUpRGgAeM(v), false) end
+		end })
+	EiBuKTYONP:Divider()
+	EiBuKTYONP:Dropdown({Title= VAbjuBuaLAG("文字颜色", 1), Values = {VAbjuBuaLAG("默认", 1),VAbjuBuaLAG("青色", 1),VAbjuBuaLAG("粉色", 1),VAbjuBuaLAG("紫色", 1),VAbjuBuaLAG("橙色", 1),VAbjuBuaLAG("红色", 1),VAbjuBuaLAG("绿色", 1),VAbjuBuaLAG("蓝色", 1),VAbjuBuaLAG("黄色", 1),VAbjuBuaLAG("白色", 1),VAbjuBuaLAG("彩虹", 1)}, Value = VAbjuBuaLAG("默认", 1), Callback = function(v) JPoZXbXp = v end })
+	EiBuKTYONP:Button({Title= VAbjuBuaLAG("确认应用文字颜色", 1), Icon = VAbjuBuaLAG("wbywe", 20), Callback = function()
+		local ndGZUoZQXjN = TwzExeCq.GetThemes()
+		if not ndGZUoZQXjN or not ndGZUoZQXjN.Dark then return end
+		if bozzrfBKm then bozzrfBKm:Disconnect(); rainbowTextConnection = nil end
+		if JPoZXbXp == VAbjuBuaLAG("彩虹", 1) then
+			bozzrfBKm = SjgxIDHwarbc.Heartbeat:Connect(function()
+				local BBcwWjEj = KAsGVKlAl(5)
+				ndGZUoZQXjN.Dark.Text = BBcwWjEj; ndGZUoZQXjN.Dark.Placeholder = BBcwWjEj
+				ndGZUoZQXjN.Dark.Button = BBcwWjEj; ndGZUoZQXjN.Dark.TabTitle = BBcwWjEj
+				TwzExeCq:SetTheme(VAbjuBuaLAG("Axoh", 23))
+			end)
+		elseif JPoZXbXp and JPoZXbXp ~= VAbjuBuaLAG("默认", 1) then
+			local BBcwWjEj = FbPUpRGgAeM(JPoZXbXp)
+			ndGZUoZQXjN.Dark.Text = BBcwWjEj; ndGZUoZQXjN.Dark.Placeholder = BBcwWjEj
+			ndGZUoZQXjN.Dark.Button = BBcwWjEj; ndGZUoZQXjN.Dark.TabTitle = BBcwWjEj
+			TwzExeCq:SetTheme(VAbjuBuaLAG("Ifwp", 5))
+		else TwzExeCq:SetTheme(VAbjuBuaLAG("Urib", 17)) end
+	end })
+
+	local JgjxgDldGDq = zYXqEscWmgGW:Section({Title= VAbjuBuaLAG("功能", 1), Opened = true })
+
+	-- 主要功能
+	local TsDaEaRJu = JgjxgDldGDq:Tab({Title= VAbjuBuaLAG("主要功能", 1), Icon = VAbjuBuaLAG("rkhcdqr-g", 25) })
+	TsDaEaRJu:Toggle({Title= VAbjuBuaLAG("无限体力", 1), Default = false, Callback = function(v) GgAodwWzcKw = v end })
+TsDaEaRJu:Toggle({Title= VAbjuBuaLAG("无敌模式 (软回血)", 1), Default = false, Callback = function(v) uhwDjYUAhBZP = v; if v then GgHsSbMLj() else DRbecirrHA() end end })
+	TsDaEaRJu:Toggle({Title= VAbjuBuaLAG("速度绕过 (防检测加速)", 1), Default = false, Callback = function(v) ICiSdrndIAH = v end })
+	TsDaEaRJu:Input({Title= VAbjuBuaLAG("速度绕过数值", 1), Value = VAbjuBuaLAG("41", 1), PlaceholderText = VAbjuBuaLAG("输入数字", 1), ClearTextOnFocus = false, Callback = function(v) local hBFZWAEm = lDXybxwNXFk(v); if hBFZWAEm then dvREqosSkOt = hBFZWAEm end end })
+	TsDaEaRJu:Divider()
+	TsDaEaRJu:Toggle({Title= VAbjuBuaLAG("无限体力(服务器)", 1), Default = false, Callback = function(v) TxStHdRy.stamina = v end })
+	TsDaEaRJu:Toggle({Title= VAbjuBuaLAG("无限饥饿", 1), Default = false, Callback = function(v) TxStHdRy.food = v end })
+	TsDaEaRJu:Toggle({Title= VAbjuBuaLAG("战斗拦截", 1), Default = false, Callback = CmKaOpmQJ })
+	TsDaEaRJu:Toggle({Title= VAbjuBuaLAG("隐身", 1), Default = false, Callback = function(v) nTMqGGsFSgyy(v) end })
+	TsDaEaRJu:Toggle({Title= VAbjuBuaLAG("显示隐身悬浮窗", 1), Default = false, Callback = function(v) vTxlHVWknQ = v; if v then rYSvkGKiKt() else CuUGTOElo() end end })
+	TsDaEaRJu:Toggle({Title= VAbjuBuaLAG("锁定隐身悬浮窗位置", 1), Default = false, Callback = function(v) ilVkWQQRoO = v
+		if vcFVOxCSjX then vcFVOxCSjX.Active = not v; vcFVOxCSjX.Draggable = not v end
+	end })
+	TsDaEaRJu:Toggle({Title= VAbjuBuaLAG("防布娃娃", 1), Default = false, Callback = function(v) TxStHdRy.noRagdoll = v end })
+	TsDaEaRJu:Toggle({Title= VAbjuBuaLAG("防摔伤", 1), Default = false, Callback = function(v) TxStHdRy.noFallDamage = v end })
+	TsDaEaRJu:Toggle({Title= VAbjuBuaLAG("防越狱拉回", 1), Default = false, Callback = tXAQpzNSqGmW })
+	TsDaEaRJu:Toggle({Title= VAbjuBuaLAG("自动捡钱", 1), Default = false, Callback = function(v) TxStHdRy.autoMoney = v end })
+	TsDaEaRJu:Toggle({Title= VAbjuBuaLAG("无限子弹", 1), Default = false, Callback = function(v) TxStHdRy.infiniteAmmo = v end })
+	TsDaEaRJu:Toggle({Title= VAbjuBuaLAG("快速射击", 1), Default = false, Callback = function(v) TxStHdRy.rapidFire = v; if v then srOHAgGADjAa() end end })
+	TsDaEaRJu:Divider()
+	TsDaEaRJu:Toggle({Title= VAbjuBuaLAG("开启/关闭飞行", 1), Default = false, Callback = function(v) wtzutQEtyx.flyEnabled = v; if v then vQEUJWzgTh() else LWmoBYisFXH() end end })
+	TsDaEaRJu:Input({Title= VAbjuBuaLAG("设置飞行速度", 1), Value = VAbjuBuaLAG("46", 1), PlaceholderText = VAbjuBuaLAG("输入数字(建议46-61)", 1), ClearTextOnFocus = false, Callback = function(v) local hBFZWAEm = lDXybxwNXFk(v); if hBFZWAEm and hBFZWAEm > 0 then wtzutQEtyx.flySpeed = hBFZWAEm end end })
+	TsDaEaRJu:Toggle({Title= VAbjuBuaLAG("显示飞行悬浮窗", 1), Default = false, Callback = function(v) ctnlwWsdmcm = v; if v then yIBipgSO() else jnabjXYHj() end end })
+	TsDaEaRJu:Toggle({Title= VAbjuBuaLAG("锁定飞行悬浮窗位置", 1), Default = false, Callback = function(v) LNJcIUGiLKf = v
+		if ooHTdGhSgsB then ooHTdGhSgsB.Active = not v; ooHTdGhSgsB.Draggable = not v end
+	end })
+	TsDaEaRJu:Toggle({Title= VAbjuBuaLAG("开启/关闭飞车", 1), Default = false, Callback = function(v) SHGIpldUMauX.active = v; if v then lGxLAYiPQPb() else uRSLbTlg() end end })
+	TsDaEaRJu:Input({Title= VAbjuBuaLAG("设置飞车速度", 1), Value = VAbjuBuaLAG("61", 1), PlaceholderText = VAbjuBuaLAG("输入数字(建议41-71)", 1), ClearTextOnFocus = false, Callback = function(v) local hBFZWAEm = lDXybxwNXFk(v); if hBFZWAEm and hBFZWAEm > 0 then SHGIpldUMauX.speed = hBFZWAEm end end })
+	TsDaEaRJu:Toggle({Title= VAbjuBuaLAG("显示飞车悬浮窗", 1), Default = false, Callback = function(v) zdTQfmpS = v; if v then arZsmRETZKkg() else UEGsHREI() end end })
+	TsDaEaRJu:Toggle({Title= VAbjuBuaLAG("锁定飞车悬浮窗位置", 1), Default = false, Callback = function(v) YCnWthVNGP = v
+		if wxMppWIAtf then wxMppWIAtf.Active = not v; wxMppWIAtf.Draggable = not v end
+	end })
+
+	-- 传送点
+	local eQtvUghfpQjn = JgjxgDldGDq:Tab({Title= VAbjuBuaLAG("传送点", 1), Icon = VAbjuBuaLAG("iwl-lej", 22) })
+	for XNNuXyFcK, NaRJpaOftK in BplBZTGI(pnYZdjSzByqL) do
+		eQtvUghfpQjn:Button({Title= VAbjuBuaLAG("[", 1) .. NaRJpaOftK.r .. VAbjuBuaLAG("] ", 1) .. NaRJpaOftK.n, Callback = function() CpKTuGpwfMHc(NaRJpaOftK.p) end })
+	end
+
+	-- 玩家
+	local LPsmtTwoct = JgjxgDldGDq:Tab({Title= VAbjuBuaLAG("玩家", 1), Icon = VAbjuBuaLAG("qoan", 22) })
+	LPsmtTwoct:Toggle({Title= VAbjuBuaLAG("开启/关闭跳跃", 1), Default = false, Callback = function(v)
+		wtzutQEtyx.jumpEnabled = v
+		if v then
+			SjgxIDHwarbc.Heartbeat:Connect(function()
+				local XNNuXyFcK, TmixyduBOU, root = aBGAyutOKI(BmpYjGAYZdp)
+				if TmixyduBOU and AqbZQAogGdZv and tJVkcRTg:IsKeyDown(Enum.KeyCode.Space) and TmixyduBOU:GetState() ~= Enum.HumanoidStateType.Jumping then
+					AqbZQAogGdZv.CFrame = AqbZQAogGdZv.CFrame + Vector3.new(0, wtzutQEtyx.jumpPower * 0.1, 0)
+				end
+			end)
+		end
+	end })
+	LPsmtTwoct:Slider({Title= VAbjuBuaLAG("设置跳跃高度", 1), Value = {Min= 50, Max = 400, Default = 50 }, Callback = function(v) wtzutQEtyx.jumpPower = v end })
+	LPsmtTwoct:Toggle({Title= VAbjuBuaLAG("无限跳跃", 1), Default = false, Callback = function(v) wtzutQEtyx.infiniteJump = v end })
+
+	-- 战斗
+	local jBiENwMlrb = JgjxgDldGDq:Tab({Title= VAbjuBuaLAG("战斗", 1), Icon = VAbjuBuaLAG("bqnrrgzhqr", 25) })
+	jBiENwMlrb:Toggle({Title= VAbjuBuaLAG("杀戮光环", 1), Default = false, Callback = function(v) emNtiyuGlR.auraEnabled = v end })
+	jBiENwMlrb:Toggle({Title= VAbjuBuaLAG("只攻击警察", 1), Default = false, Callback = function(v) emNtiyuGlR.auraOnlyPolice = v; if v then emNtiyuGlR.auraOnlyCivilian = false end end })
+	jBiENwMlrb:Toggle({Title= VAbjuBuaLAG("只攻击平民", 1), Default = false, Callback = function(v) emNtiyuGlR.auraOnlyCivilian = v; if v then emNtiyuGlR.auraOnlyPolice = false end end })
+	jBiENwMlrb:Toggle({Title= VAbjuBuaLAG("战斗检测", 1), Default = false, Callback = function(v) emNtiyuGlR.auraCombatCheck = v end })
+	jBiENwMlrb:Slider({Title= VAbjuBuaLAG("攻击范围", 1), Value = {Min= 10, Max = 500, Default = 50 }, Callback = function(v) emNtiyuGlR.auraRange = v end })
+	jBiENwMlrb:Slider({Title= VAbjuBuaLAG("伤害倍率", 1), Value = {Min= 1, Max = 100, Default = 5 }, Callback = function(v) emNtiyuGlR.auraDamage = v end })
+
+	-- 自瞄
+	local SyCxwFgH = JgjxgDldGDq:Tab({Title= VAbjuBuaLAG("自瞄", 1), Icon = VAbjuBuaLAG("wlimmbuclm", 20) })
+	SyCxwFgH:Toggle({Title= VAbjuBuaLAG("开启/关闭自瞄", 1), Default = false, Callback = function(v) UGQxjmeVOBf.enabled = v end })
+	SyCxwFgH:Toggle({Title= VAbjuBuaLAG("显示Cls圈", 23), Default = false, Callback = function(v) UGQxjmeVOBf.showFov = v end })
+	SyCxwFgH:Toggle({Title= VAbjuBuaLAG("显示准心", 1), Default = false, Callback = function(v) UGQxjmeVOBf.showCrosshair = v end })
+	SyCxwFgH:Toggle({Title= VAbjuBuaLAG("显示追踪线", 1), Default = false, Callback = function(v) UGQxjmeVOBf.showTracer = v end })
+	SyCxwFgH:Toggle({Title= VAbjuBuaLAG("队伍检测", 1), Default = false, Callback = function(v) UGQxjmeVOBf.teamCheck = v end })
+	SyCxwFgH:Toggle({Title= VAbjuBuaLAG("好友检测", 1), Default = false, Callback = function(v) UGQxjmeVOBf.friendCheck = v end })
+	SyCxwFgH:Toggle({Title= VAbjuBuaLAG("墙壁检测", 1), Default = false, Callback = function(v) UGQxjmeVOBf.wallCheck = v end })
+	SyCxwFgH:Toggle({Title= VAbjuBuaLAG("预判自瞄", 1), Default = false, Callback = function(v) UGQxjmeVOBf.prediction = v end })
+	SyCxwFgH:Toggle({Title= VAbjuBuaLAG("只自瞄警察", 1), Default = false, Callback = function(v) UGQxjmeVOBf.onlyPolice = v; if v then UGQxjmeVOBf.onlyCivilian = false end end })
+	SyCxwFgH:Toggle({Title= VAbjuBuaLAG("只自瞄平民", 1), Default = false, Callback = function(v) UGQxjmeVOBf.onlyCivilian = v; if v then UGQxjmeVOBf.onlyPolice = false end end })
+	SyCxwFgH:Toggle({Title= VAbjuBuaLAG("战斗检测", 1), Default = false, Callback = function(v) UGQxjmeVOBf.combatCheck = v end })
+	SyCxwFgH:Dropdown({Title= VAbjuBuaLAG("优先锁定模式", 1), Values = {VAbjuBuaLAG("准心最近", 1),VAbjuBuaLAG("距离最近", 1),VAbjuBuaLAG("血量最低", 1)}, Value = VAbjuBuaLAG("准心最近", 1), Callback = function(v) UGQxjmeVOBf.targetMode = v end })
+	SyCxwFgH:Dropdown({Title= VAbjuBuaLAG("瞄准身体部位", 1), Values = {VAbjuBuaLAG("头", 1),VAbjuBuaLAG("胸", 1),VAbjuBuaLAG("左手", 1),VAbjuBuaLAG("右手", 1),VAbjuBuaLAG("左腿", 1),VAbjuBuaLAG("右腿", 1)}, Value = VAbjuBuaLAG("头", 1), Callback = function(v) UGQxjmeVOBf.targetPart = v end })
+	SyCxwFgH:Slider({Title= VAbjuBuaLAG("Pyf圈大小", 10), Value = {Min= 1, Max = 500, Default = 50 }, Callback = function(v) UGQxjmeVOBf.fov = v end })
+	SyCxwFgH:Slider({Title= VAbjuBuaLAG("自瞄平滑度", 1), Value = {Min= 1, Max = 10, Default = 10 }, Callback = function(v) UGQxjmeVOBf.smoothness = v / 10 end })
+	SyCxwFgH:Slider({Title= VAbjuBuaLAG("Yho圈厚度", 19), Value = {Min= 1, Max = 5, Default = 2 }, Callback = function(v) UGQxjmeVOBf.fovThickness = v end })
+	SyCxwFgH:Dropdown({Title= VAbjuBuaLAG("颜色选择", 1), Values = {VAbjuBuaLAG("红色", 1),VAbjuBuaLAG("黄色", 1),VAbjuBuaLAG("绿色", 1),VAbjuBuaLAG("蓝色", 1),VAbjuBuaLAG("紫色", 1),VAbjuBuaLAG("白色", 1),VAbjuBuaLAG("黑色", 1),VAbjuBuaLAG("彩虹色", 1)}, Value = VAbjuBuaLAG("红色", 1), Callback = function(v) UGQxjmeVOBf.color = v end })
+
+	-- Ragebot
+	local YXkQMKIHBIR = JgjxgDldGDq:Tab({Title= VAbjuBuaLAG("Nwcaxkp", 22), Icon = VAbjuBuaLAG("ans", 25) })
+	YXkQMKIHBIR:Toggle({Title= VAbjuBuaLAG("Irxvsfk", 17), Default = false, Callback = function(v) EyhbHFKv.enabled = v end })
+	YXkQMKIHBIR:Slider({Title= VAbjuBuaLAG("攻击距离", 1), Value = {Min= 10, Max = 500, Default = 150 }, Step = 1, Callback = function(v) EyhbHFKv.range = v end })
+	YXkQMKIHBIR:Slider({Title= VAbjuBuaLAG("攻击间隔", 1), Value = {Min= 0.01, Max = 1, Default = 0.05 }, Step = 0.01, Callback = function(v) EyhbHFKv.interval = v end })
+	YXkQMKIHBIR:Dropdown({Title= VAbjuBuaLAG("攻击部位", 1), Values = {VAbjuBuaLAG("头部", 1),VAbjuBuaLAG("躯干", 1),VAbjuBuaLAG("左臂", 1),VAbjuBuaLAG("右臂", 1),VAbjuBuaLAG("左腿", 1),VAbjuBuaLAG("右腿", 1)}, Value = VAbjuBuaLAG("头部", 1), Callback = function(v) EyhbHFKv.bodyPart = ndctqmxING[v] or VAbjuBuaLAG("Yvru", 17) end })
+	YXkQMKIHBIR:Toggle({Title= VAbjuBuaLAG("职业检测", 1), Default = false, Callback = function(v) EyhbHFKv.jobCheck = v end })
+	YXkQMKIHBIR:Toggle({Title= VAbjuBuaLAG("墙壁检测", 1), Default = false, Callback = function(v) EyhbHFKv.wallCheck = v end })
+	YXkQMKIHBIR:Toggle({Title= VAbjuBuaLAG("战斗状态检测", 1), Default = false, Callback = function(v) EyhbHFKv.combatCheck = v end })
+	YXkQMKIHBIR:Toggle({Title= VAbjuBuaLAG("锁定警察", 1), Default = false, Callback = function(v) EyhbHFKv.policeLock = v; if v then EyhbHFKv.civilianLock = false end end })
+	YXkQMKIHBIR:Toggle({Title= VAbjuBuaLAG("锁定平民", 1), Default = false, Callback = function(v) EyhbHFKv.civilianLock = v; if v then EyhbHFKv.policeLock = false end end })
+	YXkQMKIHBIR:Toggle({Title= VAbjuBuaLAG("弹道显示", 1), Default = false, Callback = function(v) EyhbHFKv.beam = v end })
+
+	-- 范围
+	local pqwLgJViLR = JgjxgDldGDq:Tab({Title= VAbjuBuaLAG("范围", 1), Icon = VAbjuBuaLAG("atkkrdxd", 25) })
+	pqwLgJViLR:Toggle({Title= VAbjuBuaLAG("开启/关闭范围", 1), Default = false, Callback = function(v)
+		HuFdzhQostMA.active = v
+		if not v then for XNNuXyFcK, p in BplBZTGI(DfrLwMIz:GetPlayers()) do if p.Character then WCCtnSwRBQJ(p.Character) end end end
+	end })
+	pqwLgJViLR:Input({Title= VAbjuBuaLAG("范围大小设置", 1), Value = VAbjuBuaLAG("21", 1), Callback = function(v) local hBFZWAEm = lDXybxwNXFk(v); if hBFZWAEm and hBFZWAEm > 0 then HuFdzhQostMA.size = hBFZWAEm end end })
+	pqwLgJViLR:Input({Title= VAbjuBuaLAG("范围透明度设置(1-2)", 1), Value = VAbjuBuaLAG("1.8", 1), Callback = function(v) local hBFZWAEm = lDXybxwNXFk(v); if hBFZWAEm and hBFZWAEm >= 0 and hBFZWAEm <= 1 then HuFdzhQostMA.transparency = hBFZWAEm end end })
+	pqwLgJViLR:Dropdown({Title= VAbjuBuaLAG("选择范围颜色", 1), Values = {VAbjuBuaLAG("红色", 1),VAbjuBuaLAG("蓝色", 1),VAbjuBuaLAG("黄色", 1),VAbjuBuaLAG("绿色", 1),VAbjuBuaLAG("青色", 1),VAbjuBuaLAG("橙色", 1),VAbjuBuaLAG("紫色", 1),VAbjuBuaLAG("白色", 1),VAbjuBuaLAG("黑色", 1),VAbjuBuaLAG("彩虹色", 1)}, Value = VAbjuBuaLAG("红色", 1), Callback = function(v) HuFdzhQostMA.color = v; HuFdzhQostMA.rainbow = (v == VAbjuBuaLAG("彩虹色", 1)) end })
+	pqwLgJViLR:Dropdown({Title= VAbjuBuaLAG("选择范围材质", 1), Values = {VAbjuBuaLAG("Izji", 21),VAbjuBuaLAG("Lhwopey", 22),VAbjuBuaLAG("Ummb", 24),VAbjuBuaLAG("Ibqju", 16),VAbjuBuaLAG("Amlapcrc", 24),VAbjuBuaLAG("Gynuf", 20),VAbjuBuaLAG("OikkpdLhwopey", 22)}, Value = VAbjuBuaLAG("Mdnm", 25), Callback = function(v) HuFdzhQostMA.material = v end })
+	pqwLgJViLR:Toggle({Title= VAbjuBuaLAG("EGT范围", 17), Default = false, Callback = function(v) HuFdzhQostMA.affectNPC = v end })
+	pqwLgJViLR:Toggle({Title= VAbjuBuaLAG("队伍检测", 1), Default = false, Callback = function(v) HuFdzhQostMA.teamCheck = v end })
+	pqwLgJViLR:Toggle({Title= VAbjuBuaLAG("活体检测", 1), Default = false, Callback = function(v) HuFdzhQostMA.checkCorpses = v end })
+	pqwLgJViLR:Toggle({Title= VAbjuBuaLAG("显示轮廓", 1), Default = false, Callback = function(v) HuFdzhQostMA.outline = v end })
+	pqwLgJViLR:Toggle({Title= VAbjuBuaLAG("启用/禁用碰撞", 1), Default = false, Callback = function(v) HuFdzhQostMA.collision = v end })
+	pqwLgJViLR:Toggle({Title= VAbjuBuaLAG("发光效果", 1), Default = false, Callback = function(v) HuFdzhQostMA.glow = v end })
+	pqwLgJViLR:Toggle({Title= VAbjuBuaLAG("脉动效果", 1), Default = false, Callback = function(v) HuFdzhQostMA.pulse = v end })
+
+	-- ESP
+	local buGOusdm = JgjxgDldGDq:Tab({Title= VAbjuBuaLAG("BPM", 23), Icon = VAbjuBuaLAG("ztz", 21) })
+	buGOusdm:Toggle({Title= VAbjuBuaLAG("玩家透视总开关", 1), Default = false, Callback = function(v)
+		tBQTKqrG.enabled = v
+		if not v then for p in uJExNtduzi(tBQTKqrG.trackers) do RDfOtAwbYHv(p) end else YFsRNGKO() end
+	end })
+	buGOusdm:Toggle({Title= VAbjuBuaLAG("显示名字", 1), Default = true, Callback = function(v) tBQTKqrG.name = v end })
+	buGOusdm:Toggle({Title= VAbjuBuaLAG("显示距离", 1), Default = true, Callback = function(v) tBQTKqrG.distance = v end })
+	buGOusdm:Toggle({Title= VAbjuBuaLAG("显示血量", 1), Default = true, Callback = function(v) tBQTKqrG.health = v end })
+	buGOusdm:Toggle({Title= VAbjuBuaLAG("显示高亮", 1), Default = true, Callback = function(v) tBQTKqrG.highlight = v end })
+	buGOusdm:Toggle({Title= VAbjuBuaLAG("显示追踪线", 1), Default = false, Callback = function(v) tBQTKqrG.tracer = v end })
+	buGOusdm:Dropdown({Title= VAbjuBuaLAG("追踪线起点", 1), Values = {VAbjuBuaLAG("屏幕底部", 1),VAbjuBuaLAG("屏幕中心", 1),VAbjuBuaLAG("屏幕顶部", 1)}, Value = VAbjuBuaLAG("屏幕底部", 1), Callback = function(v) tBQTKqrG.tracerOrigin = v end })
+
+	-- 警察功能
+	local jQgbRCAW = JgjxgDldGDq:Tab({Title= VAbjuBuaLAG("警察功能", 1), Icon = VAbjuBuaLAG("fylbasddq", 24) })
+	jQgbRCAW:Toggle({Title= VAbjuBuaLAG("自动铐", 1), Default = false, Callback = function(v) TxStHdRy.autoCuff = v; if v then wfTjJeOGrRfp() end end })
+	jQgbRCAW:Toggle({Title= VAbjuBuaLAG("自动传送", 1), Default = false, Callback = function(v) tzcppRKh.teleport = v end })
+	jQgbRCAW:Toggle({Title= VAbjuBuaLAG("战斗检测", 1), Default = false, Callback = function(v) tzcppRKh.combatCheck = v end })
+	jQgbRCAW:Slider({Title= VAbjuBuaLAG("范围", 1), Value = {Min= 10, Max = 500, Default = 200 }, Step = 5, Callback = function(v) tzcppRKh.range = v end })
+	jQgbRCAW:Slider({Title= VAbjuBuaLAG("间隔", 1), Value = {Min= 0.1, Max = 3, Default = 0.5 }, Step = 0.1, Callback = function(v) tzcppRKh.delay = v end })
+
+	zYXqEscWmgGW:OnClose(function() ujDXuBpAgmgs = false; zYXqEscWmgGW = nil end)
+	zYXqEscWmgGW:OnDestroy(function() ujDXuBpAgmgs = false; zYXqEscWmgGW = nil end)
+end
+
+TwzExeCq:Popup({Title= VAbjuBuaLAG("乔尼是给如何剖解心是给", 1), Icon = VAbjuBuaLAG("rozqjkdr", 25),
+	Content = VAbjuBuaLAG("欢迎使用乔尼是给\n精简版", 3),
+	Buttons = { {Title= VAbjuBuaLAG("打开脚本", 1), Variant = VAbjuBuaLAG("Oqhlzqx", 25), Callback = NHzaHBBTEGu } }
+})
